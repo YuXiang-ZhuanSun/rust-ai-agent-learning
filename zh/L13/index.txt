@@ -1,0 +1,246 @@
+1:"$Sreact.fragment"
+2:I[39756,["/rust-ai-agent-learning/_next/static/chunks/ff1a16fafef87110.js","/rust-ai-agent-learning/_next/static/chunks/0bd6498bda341889.js"],"default"]
+3:I[37457,["/rust-ai-agent-learning/_next/static/chunks/ff1a16fafef87110.js","/rust-ai-agent-learning/_next/static/chunks/0bd6498bda341889.js"],"default"]
+5:I[95914,["/rust-ai-agent-learning/_next/static/chunks/cb90481590623a88.js","/rust-ai-agent-learning/_next/static/chunks/b1d20a9f176e53db.js"],"Sidebar"]
+7:I[97367,["/rust-ai-agent-learning/_next/static/chunks/ff1a16fafef87110.js","/rust-ai-agent-learning/_next/static/chunks/0bd6498bda341889.js"],"OutletBoundary"]
+8:"$Sreact.suspense"
+a:I[97367,["/rust-ai-agent-learning/_next/static/chunks/ff1a16fafef87110.js","/rust-ai-agent-learning/_next/static/chunks/0bd6498bda341889.js"],"ViewportBoundary"]
+c:I[97367,["/rust-ai-agent-learning/_next/static/chunks/ff1a16fafef87110.js","/rust-ai-agent-learning/_next/static/chunks/0bd6498bda341889.js"],"MetadataBoundary"]
+e:I[68027,["/rust-ai-agent-learning/_next/static/chunks/ff1a16fafef87110.js","/rust-ai-agent-learning/_next/static/chunks/0bd6498bda341889.js"],"default"]
+:HL["/rust-ai-agent-learning/_next/static/chunks/98cc5079005af0dc.css","style"]
+0:{"P":null,"b":"K2_NoIaMKUO_YN4A9Ojf9","c":["","zh","L13",""],"q":"","i":false,"f":[[["",{"children":[["locale","zh","d"],{"children":["(learn)",{"children":[["lesson","L13","d"],{"children":["__PAGE__",{}]}]}]},"$undefined","$undefined",true]}],[["$","$1","c",{"children":[null,["$","$L2",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L3",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":[[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":{"fontFamily":"system-ui,\"Segoe UI\",Roboto,Helvetica,Arial,sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\"","height":"100vh","textAlign":"center","display":"flex","flexDirection":"column","alignItems":"center","justifyContent":"center"},"children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":{"display":"inline-block","margin":"0 20px 0 0","padding":"0 23px 0 0","fontSize":24,"fontWeight":500,"verticalAlign":"top","lineHeight":"49px"},"children":404}],["$","div",null,{"style":{"display":"inline-block"},"children":["$","h2",null,{"style":{"fontSize":14,"fontWeight":400,"lineHeight":"49px","margin":0},"children":"This page could not be found."}]}]]}]}]],[]],"forbidden":"$undefined","unauthorized":"$undefined"}]]}],{"children":[["$","$1","c",{"children":[[["$","link","0",{"rel":"stylesheet","href":"/rust-ai-agent-learning/_next/static/chunks/98cc5079005af0dc.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}],["$","script","script-0",{"src":"/rust-ai-agent-learning/_next/static/chunks/cb90481590623a88.js","async":true,"nonce":"$undefined"}]],"$L4"]}],{"children":[["$","$1","c",{"children":[[["$","script","script-0",{"src":"/rust-ai-agent-learning/_next/static/chunks/b1d20a9f176e53db.js","async":true,"nonce":"$undefined"}]],["$","div",null,{"className":"flex gap-8","children":[["$","$L5",null,{}],["$","div",null,{"className":"min-w-0 flex-1","children":["$","$L2",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L3",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]}]]}]]}],{"children":[["$","$1","c",{"children":[null,["$","$L2",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L3",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}],{"children":[["$","$1","c",{"children":["$L6",[["$","script","script-0",{"src":"/rust-ai-agent-learning/_next/static/chunks/85f229d7e92be779.js","async":true,"nonce":"$undefined"}],["$","script","script-1",{"src":"/rust-ai-agent-learning/_next/static/chunks/bf8e79ee9995df45.js","async":true,"nonce":"$undefined"}]],["$","$L7",null,{"children":["$","$8",null,{"name":"Next.MetadataOutlet","children":"$@9"}]}]]}],{},null,false,false]},null,false,false]},null,false,false]},null,false,false]},null,false,false],["$","$1","h",{"children":[null,["$","$La",null,{"children":"$Lb"}],["$","div",null,{"hidden":true,"children":["$","$Lc",null,{"children":["$","$8",null,{"name":"Next.Metadata","children":"$Ld"}]}]}],null]}],false]],"m":"$undefined","G":["$e",[]],"S":true}
+f:I[33499,["/rust-ai-agent-learning/_next/static/chunks/cb90481590623a88.js"],"I18nProvider"]
+10:I[45872,["/rust-ai-agent-learning/_next/static/chunks/cb90481590623a88.js"],"Header"]
+11:I[58810,["/rust-ai-agent-learning/_next/static/chunks/cb90481590623a88.js","/rust-ai-agent-learning/_next/static/chunks/b1d20a9f176e53db.js","/rust-ai-agent-learning/_next/static/chunks/85f229d7e92be779.js","/rust-ai-agent-learning/_next/static/chunks/bf8e79ee9995df45.js"],"LessonDetailClient"]
+4:["$","html",null,{"lang":"zh","suppressHydrationWarning":true,"children":[["$","head",null,{"children":["$","script",null,{"dangerouslySetInnerHTML":{"__html":"\n          (function() {\n            document.body && document.body.classList.add('no-transition');\n            var theme = localStorage.getItem('theme');\n            if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {\n              document.documentElement.classList.add('dark');\n            }\n            window.addEventListener('DOMContentLoaded', function() {\n              requestAnimationFrame(function() {\n                document.body.classList.remove('no-transition');\n              });\n            });\n          })();\n        "}}]}],["$","body",null,{"className":"flex min-h-screen flex-col bg-[var(--color-bg)] text-[var(--color-text)] antialiased","children":["$","$Lf",null,{"locale":"zh","children":[["$","$L10",null,{}],["$","main",null,{"className":"mx-auto w-full max-w-7xl flex-1 px-4 py-8 sm:px-6 lg:px-8","children":["$","$L2",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L3",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]}],["$","footer",null,{"className":"border-t border-[var(--color-border)] bg-[var(--color-bg)]","children":["$","div",null,{"className":"mx-auto flex max-w-7xl items-center justify-between px-4 py-6 sm:px-6 lg:px-8","children":["$","p",null,{"className":"text-xs text-zinc-400 dark:text-zinc-500","children":"(c) 2025 AI Agent Learning"}]}]}]]}]}]]}]
+12:T2aa9,use crate::lessons::lesson02_tools::ToolRegistry;
+use crate::lessons::lesson06_context_compact::{estimate_tokens, micro_compact, summary_replacement};
+use crate::lessons::lesson09_agent_teams::TeammateManager;
+use crate::openai::{ChatMessage, OpenAiClient, ToolSpec};
+use crate::runtime::{
+    BackgroundManager, MessageBus, SkillLoader, TaskManager, TaskStatus, TodoManager,
+};
+use anyhow::Result;
+use serde_json::json;
+use std::path::PathBuf;
+
+pub struct FullAgent {
+    client: OpenAiClient,
+    tools: ToolRegistry,
+    todo: TodoManager,
+    skills: SkillLoader,
+    tasks: TaskManager,
+    background: BackgroundManager,
+    bus: MessageBus,
+    team: TeammateManager,
+}
+
+impl FullAgent {
+    pub fn new(workspace: PathBuf) -> Result<Self> {
+        Ok(Self {
+            client: OpenAiClient::from_env()?,
+            tools: ToolRegistry::new(workspace.clone()),
+            todo: TodoManager::default(),
+            skills: SkillLoader::from_dir(workspace.join("skills"))?,
+            tasks: TaskManager::new(workspace.join(".tasks"))?,
+            background: BackgroundManager::default(),
+            bus: MessageBus::new(workspace.join(".team").join("inbox"))?,
+            team: TeammateManager::default(),
+        })
+    }
+
+    pub fn system_prompt(&self) -> String {
+        format!(
+            "You are a coding agent. Use tools, todos, tasks, subagents, skills, background work, and team messages as needed.\nSkills:\n{}",
+            self.skills.descriptions()
+        )
+    }
+
+    pub fn tool_specs(&self) -> Vec<ToolSpec> {
+        let mut specs = self.tools.specs();
+        specs.extend([
+            ToolSpec::object("TodoWrite", "Replace the todo checklist.", json!({ "items": { "type": "array" } }), &["items"]),
+            ToolSpec::object("task", "Delegate a prompt to a focused subagent.", json!({ "prompt": { "type": "string" }, "agent_type": { "type": "string" } }), &["prompt"]),
+            ToolSpec::object("load_skill", "Load a skill by name.", json!({ "name": { "type": "string" } }), &["name"]),
+            ToolSpec::object("compress", "Manually compact context.", json!({ "summary": { "type": "string" } }), &[]),
+            ToolSpec::object("task_create", "Create a task.", json!({ "subject": { "type": "string" }, "description": { "type": "string" } }), &["subject", "description"]),
+            ToolSpec::object("task_update", "Update task status and dependencies.", json!({ "id": { "type": "integer" }, "status": { "type": "string" }, "blocked_by": { "type": "array" }, "blocks": { "type": "array" } }), &["id"]),
+            ToolSpec::object("task_get", "Read one task by id.", json!({ "id": { "type": "integer" } }), &["id"]),
+            ToolSpec::object("task_list", "List all tasks.", json!({}), &[]),
+            ToolSpec::object("background_run", "Run a command in the background.", json!({ "command": { "type": "string" }, "timeout_secs": { "type": "integer" } }), &["command"]),
+            ToolSpec::object("check_background", "Check a background task by id.", json!({ "id": { "type": "string" } }), &["id"]),
+            ToolSpec::object("spawn_teammate", "Register a teammate.", json!({ "name": { "type": "string" }, "role": { "type": "string" }, "prompt": { "type": "string" } }), &["name", "role"]),
+            ToolSpec::object("list_teammates", "List teammate names.", json!({}), &[]),
+            ToolSpec::object("send_message", "Send a team message.", json!({ "to": { "type": "string" }, "body": { "type": "string" } }), &["to", "body"]),
+            ToolSpec::object("read_inbox", "Read and drain the lead inbox.", json!({}), &[]),
+            ToolSpec::object("broadcast", "Broadcast a message to teammates.", json!({ "body": { "type": "string" } }), &["body"]),
+            ToolSpec::object("shutdown_request", "Request that a teammate shuts down.", json!({ "to": { "type": "string" }, "reason": { "type": "string" } }), &["to", "reason"]),
+            ToolSpec::object("plan_approval", "Send a plan approval decision.", json!({ "to": { "type": "string" }, "request_id": { "type": "string" }, "approved": { "type": "boolean" } }), &["to", "request_id", "approved"]),
+        ]);
+        specs
+    }
+
+    pub async fn run(&mut self, prompt: &str) -> Result<String> {
+        let mut messages = vec![ChatMessage::system(self.system_prompt()), ChatMessage::user(prompt)];
+        let mut rounds_without_todo = 0;
+
+        for _ in 0..30 {
+            micro_compact(&mut messages, 8, 500);
+            if estimate_tokens(&messages) > 100_000 {
+                messages = summary_replacement("Conversation compacted by token threshold.");
+            }
+
+            for note in self.background.drain() {
+                messages.push(ChatMessage::user(format!(
+                    "<background-result id=\"{}\" status=\"{}\">{}</background-result>",
+                    note.id,
+                    note.status,
+                    note.result.unwrap_or_default()
+                )));
+            }
+
+            let inbox = self.bus.read_inbox("lead")?;
+            if !inbox.is_empty() {
+                messages.push(ChatMessage::user(format!(
+                    "<inbox>{}</inbox>",
+                    serde_json::to_string(&inbox)?
+                )));
+            }
+
+            let reply = self.client.chat(&messages, &self.tool_specs()).await?;
+            if let Some(calls) = &reply.tool_calls {
+                messages.push(reply.clone());
+                let mut used_todo = false;
+                for call in calls {
+                    let args = serde_json::from_str(&call.function.arguments)?;
+                    let output = self.execute_tool(&call.function.name, args)?;
+                    if call.function.name == "TodoWrite" {
+                        used_todo = true;
+                    }
+                    messages.push(ChatMessage::tool(&call.id, output));
+                }
+                rounds_without_todo = if used_todo { 0 } else { rounds_without_todo + 1 };
+                if self.todo.has_open_items() && rounds_without_todo >= 3 {
+                    messages.push(ChatMessage::user("Reminder: update TodoWrite before continuing."));
+                }
+            } else {
+                return Ok(reply.text().to_string());
+            }
+        }
+
+        Ok("agent stopped after the safety round limit".to_string())
+    }
+
+    pub fn execute_tool(&mut self, name: &str, args: serde_json::Value) -> Result<String> {
+        match name {
+            "TodoWrite" => {
+                let items = serde_json::from_value(args["items"].clone())?;
+                self.todo.update(items)
+            }
+            "load_skill" => self.skills.load(args["name"].as_str().unwrap_or_default()),
+            "task" => Ok(format!(
+                "subagent accepted {} task: {}",
+                args["agent_type"].as_str().unwrap_or("general"),
+                args["prompt"].as_str().unwrap_or_default()
+            )),
+            "compress" => Ok("manual compression requested; the next loop may replace history with a summary".to_string()),
+            "task_create" => {
+                let task = self.tasks.create(
+                    args["subject"].as_str().unwrap_or("untitled"),
+                    args["description"].as_str().unwrap_or_default(),
+                )?;
+                Ok(serde_json::to_string_pretty(&task)?)
+            }
+            "task_update" => {
+                let task = self.tasks.update(
+                    args["id"].as_u64().unwrap_or_default(),
+                    args["status"].as_str().map(parse_status).transpose()?,
+                    json_u64_list(&args["blocked_by"]),
+                    json_u64_list(&args["blocks"]),
+                )?;
+                Ok(serde_json::to_string_pretty(&task)?)
+            }
+            "task_get" => {
+                let task = self.tasks.get(args["id"].as_u64().unwrap_or_default())?;
+                Ok(serde_json::to_string_pretty(&task)?)
+            }
+            "task_list" => Ok(serde_json::to_string_pretty(&self.tasks.list()?)?),
+            "background_run" => Ok(self.background.run(
+                args["command"].as_str().unwrap_or_default(),
+                args["timeout_secs"].as_u64().unwrap_or(30),
+            )),
+            "check_background" => Ok(serde_json::to_string_pretty(
+                &self.background.check(args["id"].as_str().unwrap_or_default()),
+            )?),
+            "spawn_teammate" => Ok(self.team.spawn(
+                args["name"].as_str().unwrap_or("teammate"),
+                args["role"].as_str().unwrap_or("worker"),
+                args["prompt"].as_str().unwrap_or_default(),
+            )),
+            "list_teammates" => Ok(serde_json::to_string_pretty(&self.team.names())?),
+            "send_message" => {
+                self.bus.send(
+                    "lead",
+                    args["to"].as_str().unwrap_or("lead"),
+                    "message",
+                    json!({ "body": args["body"].as_str().unwrap_or_default() }),
+                )?;
+                Ok("sent".to_string())
+            }
+            "read_inbox" => Ok(serde_json::to_string_pretty(&self.bus.read_inbox("lead")?)?),
+            "broadcast" => {
+                let sent = self.bus.broadcast(
+                    "lead",
+                    &self.team.names(),
+                    json!({ "body": args["body"].as_str().unwrap_or_default() }),
+                )?;
+                Ok(format!("broadcast to {sent} teammates"))
+            }
+            "shutdown_request" => {
+                self.bus.send(
+                    "lead",
+                    args["to"].as_str().unwrap_or("teammate"),
+                    "shutdown_request",
+                    json!({ "reason": args["reason"].as_str().unwrap_or_default() }),
+                )?;
+                Ok("shutdown requested".to_string())
+            }
+            "plan_approval" => {
+                self.bus.send_with_request(
+                    "lead",
+                    args["to"].as_str().unwrap_or("teammate"),
+                    "plan_approval",
+                    json!({ "approved": args["approved"].as_bool().unwrap_or(false) }),
+                    Some(args["request_id"].as_str().unwrap_or_default().to_string()),
+                )?;
+                Ok("plan decision sent".to_string())
+            }
+            other => self.tools.execute(other, args),
+        }
+    }
+}
+
+fn parse_status(status: &str) -> Result<TaskStatus> {
+    match status {
+        "pending" => Ok(TaskStatus::Pending),
+        "in_progress" => Ok(TaskStatus::InProgress),
+        "blocked" => Ok(TaskStatus::Blocked),
+        "completed" => Ok(TaskStatus::Completed),
+        other => anyhow::bail!("unknown task status: {other}"),
+    }
+}
+
+fn json_u64_list(value: &serde_json::Value) -> Vec<u64> {
+    value
+        .as_array()
+        .into_iter()
+        .flatten()
+        .filter_map(serde_json::Value::as_u64)
+        .collect()
+}
+6:["$","div",null,{"className":"mx-auto max-w-3xl space-y-10 py-4","children":[["$","header",null,{"className":"space-y-3","children":[["$","div",null,{"className":"flex flex-wrap items-center gap-3","children":[["$","span",null,{"className":"rounded-lg bg-zinc-100 px-3 py-1 font-mono text-lg font-bold dark:bg-zinc-800","children":"L13"}],["$","h1",null,{"className":"text-2xl font-bold sm:text-3xl","children":"完整参考 Agent"}],["$","span",null,{"className":"inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300","children":"协作"}]]}],["$","p",null,{"className":"text-lg text-zinc-500 dark:text-zinc-400","children":"机制组合"}],["$","div",null,{"className":"flex flex-wrap items-center gap-4 text-sm text-zinc-500 dark:text-zinc-400","children":[[["$","span",null,{"className":"font-mono","children":[212," LOC"]}],["$","span",null,{"children":[17," ","个工具"]}]],["$","span",null,{"className":"rounded-full bg-zinc-100 px-2.5 py-0.5 text-xs dark:bg-zinc-800","children":"All mechanisms in one loop"}]]}],["$","blockquote",null,{"className":"border-l-4 border-zinc-300 pl-4 text-sm italic text-zinc-500 dark:border-zinc-600 dark:text-zinc-400","children":"完整 Agent 是围绕同一个循环做精细状态编排。"}]]}],["$","$L11",null,{"lessonId":"L13","source":"$12","filename":"lesson13_full_agent.rs"}],"$L13"]}]
+14:I[22016,["/rust-ai-agent-learning/_next/static/chunks/cb90481590623a88.js","/rust-ai-agent-learning/_next/static/chunks/b1d20a9f176e53db.js","/rust-ai-agent-learning/_next/static/chunks/85f229d7e92be779.js","/rust-ai-agent-learning/_next/static/chunks/bf8e79ee9995df45.js"],""]
+13:["$","nav",null,{"className":"flex items-center justify-between border-t border-zinc-200 pt-6 dark:border-zinc-700","children":[["$","$L14",null,{"href":"/zh/L12","className":"group flex items-center gap-2 text-sm text-zinc-500 transition-colors hover:text-zinc-900 dark:hover:text-white","children":[["$","span",null,{"className":"transition-transform group-hover:-translate-x-1","children":"←"}],["$","div",null,{"children":[["$","div",null,{"className":"text-xs text-zinc-400","children":"上一课"}],["$","div",null,{"className":"font-medium","children":["L12"," - ","工作树隔离"]}]]}]]}],["$","div",null,{}]]}]
+b:[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1"}]]
+9:null
+d:[["$","title","0",{"children":"AI Agent 学习教程"}],["$","meta","1",{"name":"description","content":"用 Rust 从零构建 AI Agent 的 14 节渐进式课程"}]]

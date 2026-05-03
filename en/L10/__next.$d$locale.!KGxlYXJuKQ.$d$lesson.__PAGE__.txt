@@ -1,0 +1,141 @@
+1:"$Sreact.fragment"
+2:I[58810,["/rust-ai-agent-learning/_next/static/chunks/cb90481590623a88.js","/rust-ai-agent-learning/_next/static/chunks/b1d20a9f176e53db.js","/rust-ai-agent-learning/_next/static/chunks/85f229d7e92be779.js","/rust-ai-agent-learning/_next/static/chunks/bf8e79ee9995df45.js"],"LessonDetailClient"]
+8:I[22016,["/rust-ai-agent-learning/_next/static/chunks/cb90481590623a88.js","/rust-ai-agent-learning/_next/static/chunks/b1d20a9f176e53db.js","/rust-ai-agent-learning/_next/static/chunks/85f229d7e92be779.js","/rust-ai-agent-learning/_next/static/chunks/bf8e79ee9995df45.js"],""]
+9:I[97367,["/rust-ai-agent-learning/_next/static/chunks/ff1a16fafef87110.js","/rust-ai-agent-learning/_next/static/chunks/0bd6498bda341889.js"],"OutletBoundary"]
+a:"$Sreact.suspense"
+3:Td45,use crate::runtime::MessageBus;
+use anyhow::Result;
+use serde::{Deserialize, Serialize};
+use serde_json::json;
+use std::collections::BTreeMap;
+use uuid::Uuid;
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ProtocolRequest {
+    pub request_id: String,
+    pub teammate: String,
+    pub kind: String,
+    pub status: String,
+}
+
+#[derive(Debug, Default, Clone)]
+pub struct ProtocolTracker {
+    requests: BTreeMap<String, ProtocolRequest>,
+}
+
+impl ProtocolTracker {
+    pub fn record(&mut self, teammate: &str, kind: &str) -> String {
+        let request_id = Uuid::new_v4().to_string();
+        self.requests.insert(
+            request_id.clone(),
+            ProtocolRequest {
+                request_id: request_id.clone(),
+                teammate: teammate.to_string(),
+                kind: kind.to_string(),
+                status: "pending".to_string(),
+            },
+        );
+        request_id
+    }
+
+    pub fn resolve(&mut self, request_id: &str, status: &str) -> Result<ProtocolRequest> {
+        let request = self
+            .requests
+            .get_mut(request_id)
+            .ok_or_else(|| anyhow::anyhow!("unknown protocol request: {request_id}"))?;
+        request.status = status.to_string();
+        Ok(request.clone())
+    }
+
+    pub fn list(&self) -> Vec<ProtocolRequest> {
+        self.requests.values().cloned().collect()
+    }
+}
+
+pub fn request_shutdown(bus: &MessageBus, from: &str, to: &str, reason: &str) -> Result<String> {
+    let request_id = Uuid::new_v4().to_string();
+    bus.send_with_request(
+        from,
+        to,
+        "shutdown_request",
+        json!({ "reason": reason }),
+        Some(request_id.clone()),
+    )?;
+    Ok(request_id)
+}
+
+pub fn approve_plan(
+    bus: &MessageBus,
+    from: &str,
+    to: &str,
+    request_id: &str,
+    approved: bool,
+) -> Result<()> {
+    bus.send_with_request(
+        from,
+        to,
+        "plan_approval",
+        json!({ "approved": approved }),
+        Some(request_id.to_string()),
+    )?;
+    Ok(())
+}
+
+pub struct TeamProtocols {
+    bus: MessageBus,
+    tracker: ProtocolTracker,
+}
+
+impl TeamProtocols {
+    pub fn new(bus: MessageBus) -> Self {
+        Self {
+            bus,
+            tracker: ProtocolTracker::default(),
+        }
+    }
+
+    pub fn shutdown_request(&mut self, teammate: &str, reason: &str) -> Result<String> {
+        let request_id = self.tracker.record(teammate, "shutdown_request");
+        self.bus.send_with_request(
+            "lead",
+            teammate,
+            "shutdown_request",
+            json!({ "reason": reason }),
+            Some(request_id.clone()),
+        )?;
+        Ok(request_id)
+    }
+
+    pub fn plan_decision(
+        &mut self,
+        teammate: &str,
+        request_id: &str,
+        approved: bool,
+        feedback: &str,
+    ) -> Result<()> {
+        self.bus.send_with_request(
+            "lead",
+            teammate,
+            "plan_approval",
+            json!({ "approved": approved, "feedback": feedback }),
+            Some(request_id.to_string()),
+        )?;
+        let status = if approved { "approved" } else { "rejected" };
+        self.tracker.resolve(request_id, status)?;
+        Ok(())
+    }
+
+    pub fn pending(&self) -> Vec<ProtocolRequest> {
+        self.tracker
+            .list()
+            .into_iter()
+            .filter(|request| request.status == "pending")
+            .collect()
+    }
+}
+0:{"buildId":"K2_NoIaMKUO_YN4A9Ojf9","rsc":["$","$1","c",{"children":[["$","div",null,{"className":"mx-auto max-w-3xl space-y-10 py-4","children":[["$","header",null,{"className":"space-y-3","children":[["$","div",null,{"className":"flex flex-wrap items-center gap-3","children":[["$","span",null,{"className":"rounded-lg bg-zinc-100 px-3 py-1 font-mono text-lg font-bold dark:bg-zinc-800","children":"L10"}],["$","h1",null,{"className":"text-2xl font-bold sm:text-3xl","children":"Team Protocols"}],["$","span",null,{"className":"inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300","children":"Collaboration"}]]}],["$","p",null,{"className":"text-lg text-zinc-500 dark:text-zinc-400","children":"Correlated Requests"}],["$","div",null,{"className":"flex flex-wrap items-center gap-4 text-sm text-zinc-500 dark:text-zinc-400","children":[[["$","span",null,{"className":"font-mono","children":[118," LOC"]}],["$","span",null,{"children":[0," ","tools"]}]],["$","span",null,{"className":"rounded-full bg-zinc-100 px-2.5 py-0.5 text-xs dark:bg-zinc-800","children":"request_id protocol tracking"}]]}],["$","blockquote",null,{"className":"border-l-4 border-zinc-300 pl-4 text-sm italic text-zinc-500 dark:border-zinc-600 dark:text-zinc-400","children":"Protocols are messages plus correlation and state."}]]}],["$","$L2",null,{"lessonId":"L10","source":"$3","filename":"lesson10_team_protocols.rs"}],"$L4"]}],["$L5","$L6"],"$L7"]}],"loading":null,"isPartial":false}
+4:["$","nav",null,{"className":"flex items-center justify-between border-t border-zinc-200 pt-6 dark:border-zinc-700","children":[["$","$L8",null,{"href":"/en/L09","className":"group flex items-center gap-2 text-sm text-zinc-500 transition-colors hover:text-zinc-900 dark:hover:text-white","children":[["$","span",null,{"className":"transition-transform group-hover:-translate-x-1","children":"←"}],["$","div",null,{"children":[["$","div",null,{"className":"text-xs text-zinc-400","children":"Previous"}],["$","div",null,{"className":"font-medium","children":["L09"," - ","Agent Teams"]}]]}]]}],["$","$L8",null,{"href":"/en/L11","className":"group flex items-center gap-2 text-right text-sm text-zinc-500 transition-colors hover:text-zinc-900 dark:hover:text-white","children":[["$","div",null,{"children":[["$","div",null,{"className":"text-xs text-zinc-400","children":"Next"}],["$","div",null,{"className":"font-medium","children":["Autonomous Agents"," - ","L11"]}]]}],["$","span",null,{"className":"transition-transform group-hover:translate-x-1","children":"→"}]]}]]}]
+5:["$","script","script-0",{"src":"/rust-ai-agent-learning/_next/static/chunks/85f229d7e92be779.js","async":true}]
+6:["$","script","script-1",{"src":"/rust-ai-agent-learning/_next/static/chunks/bf8e79ee9995df45.js","async":true}]
+7:["$","$L9",null,{"children":["$","$a",null,{"name":"Next.MetadataOutlet","children":"$@b"}]}]
+b:null

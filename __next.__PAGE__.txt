@@ -1,0 +1,6 @@
+1:"$Sreact.fragment"
+2:I[22016,["/rust-ai-agent-learning/_next/static/chunks/135aa1e47e43b074.js"],""]
+3:I[97367,["/rust-ai-agent-learning/_next/static/chunks/ff1a16fafef87110.js","/rust-ai-agent-learning/_next/static/chunks/0bd6498bda341889.js"],"OutletBoundary"]
+4:"$Sreact.suspense"
+0:{"buildId":"K2_NoIaMKUO_YN4A9Ojf9","rsc":["$","$1","c",{"children":[["$","main",null,{"className":"flex min-h-screen items-center justify-center p-6","children":["$","$L2",null,{"href":"/en/","className":"rounded-lg bg-zinc-900 px-5 py-3 text-sm font-medium text-white transition-colors hover:bg-zinc-700","children":"Open AI Agent Learning"}]}],[["$","script","script-0",{"src":"/rust-ai-agent-learning/_next/static/chunks/135aa1e47e43b074.js","async":true}]],["$","$L3",null,{"children":["$","$4",null,{"name":"Next.MetadataOutlet","children":"$@5"}]}]]}],"loading":null,"isPartial":false}
+5:null

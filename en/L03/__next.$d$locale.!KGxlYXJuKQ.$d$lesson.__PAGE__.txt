@@ -1,0 +1,124 @@
+1:"$Sreact.fragment"
+2:I[58810,["/rust-ai-agent-learning/_next/static/chunks/cb90481590623a88.js","/rust-ai-agent-learning/_next/static/chunks/b1d20a9f176e53db.js","/rust-ai-agent-learning/_next/static/chunks/85f229d7e92be779.js","/rust-ai-agent-learning/_next/static/chunks/bf8e79ee9995df45.js"],"LessonDetailClient"]
+8:I[22016,["/rust-ai-agent-learning/_next/static/chunks/cb90481590623a88.js","/rust-ai-agent-learning/_next/static/chunks/b1d20a9f176e53db.js","/rust-ai-agent-learning/_next/static/chunks/85f229d7e92be779.js","/rust-ai-agent-learning/_next/static/chunks/bf8e79ee9995df45.js"],""]
+9:I[97367,["/rust-ai-agent-learning/_next/static/chunks/ff1a16fafef87110.js","/rust-ai-agent-learning/_next/static/chunks/0bd6498bda341889.js"],"OutletBoundary"]
+a:"$Sreact.suspense"
+3:Tf66,use crate::lessons::lesson02_tools::ToolRegistry;
+use crate::openai::{ChatMessage, OpenAiClient, ToolSpec};
+pub use crate::runtime::{TodoItem, TodoManager, TodoStatus};
+use anyhow::Result;
+use serde_json::{json, Value};
+use std::path::PathBuf;
+
+pub fn todo_tool() -> ToolSpec {
+    ToolSpec::object(
+        "todo",
+        "Replace the agent's visible task list. Use this before and during multi-step work.",
+        json!({
+            "items": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "content": { "type": "string" },
+                        "status": {
+                            "type": "string",
+                            "enum": ["pending", "in_progress", "completed"]
+                        },
+                        "active_form": { "type": "string" }
+                    },
+                    "required": ["content", "status"]
+                }
+            }
+        }),
+        &["items"],
+    )
+}
+
+pub struct TodoAgent {
+    client: OpenAiClient,
+    tools: ToolRegistry,
+    todo: TodoManager,
+}
+
+impl TodoAgent {
+    pub fn new(workspace: PathBuf) -> Result<Self> {
+        Ok(Self {
+            client: OpenAiClient::from_env()?,
+            tools: ToolRegistry::new(workspace),
+            todo: TodoManager::default(),
+        })
+    }
+
+    pub async fn run(&mut self, prompt: &str) -> Result<String> {
+        let mut tool_specs = self.tools.specs();
+        tool_specs.push(todo_tool());
+        let mut messages = vec![
+            ChatMessage::system(
+                "You are a coding agent. Use todo to plan multi-step work. Keep exactly one item in_progress while acting.",
+            ),
+            ChatMessage::user(prompt),
+        ];
+        let mut rounds_since_todo = 0;
+
+        for _ in 0..30 {
+            let response = self.client.chat(&messages, &tool_specs).await?;
+            let calls = response.tool_calls.clone().unwrap_or_default();
+            messages.push(response);
+
+            if calls.is_empty() {
+                return Ok(messages
+                    .last()
+                    .and_then(|message| message.content.clone())
+                    .unwrap_or_default());
+            }
+
+            let mut used_todo = false;
+            for call in calls {
+                let args: Value = serde_json::from_str(&call.function.arguments)?;
+                let output = if call.function.name == "todo" {
+                    used_todo = true;
+                    let items = parse_todos(args["items"].clone())?;
+                    self.todo.update(items)?
+                } else {
+                    self.tools.execute(&call.function.name, args)?
+                };
+                messages.push(ChatMessage::tool(call.id, output));
+            }
+
+            rounds_since_todo = if used_todo { 0 } else { rounds_since_todo + 1 };
+            if self.todo.has_open_items() && rounds_since_todo >= 3 {
+                messages.push(ChatMessage::user(
+                    "<reminder>You still have open todos. Update todo before continuing.</reminder>",
+                ));
+                rounds_since_todo = 0;
+            }
+        }
+
+        Ok("stopped after safety round limit".to_string())
+    }
+}
+
+fn parse_todos(value: Value) -> Result<Vec<TodoItem>> {
+    let raw = value.as_array().cloned().unwrap_or_default();
+    raw.into_iter()
+        .map(|item| {
+            let status = match item["status"].as_str().unwrap_or("pending") {
+                "completed" => TodoStatus::Completed,
+                "in_progress" => TodoStatus::InProgress,
+                _ => TodoStatus::Pending,
+            };
+            Ok(TodoItem {
+                content: item["content"].as_str().unwrap_or_default().to_string(),
+                status,
+                active_form: item["active_form"].as_str().map(str::to_string),
+            })
+        })
+        .collect()
+}
+0:{"buildId":"K2_NoIaMKUO_YN4A9Ojf9","rsc":["$","$1","c",{"children":[["$","div",null,{"className":"mx-auto max-w-3xl space-y-10 py-4","children":[["$","header",null,{"className":"space-y-3","children":[["$","div",null,{"className":"flex flex-wrap items-center gap-3","children":[["$","span",null,{"className":"rounded-lg bg-zinc-100 px-3 py-1 font-mono text-lg font-bold dark:bg-zinc-800","children":"L03"}],["$","h1",null,{"className":"text-2xl font-bold sm:text-3xl","children":"TodoWrite"}],["$","span",null,{"className":"inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-300","children":"Planning & Coordination"}]]}],["$","p",null,{"className":"text-lg text-zinc-500 dark:text-zinc-400","children":"Visible Plan State"}],["$","div",null,{"className":"flex flex-wrap items-center gap-4 text-sm text-zinc-500 dark:text-zinc-400","children":[[["$","span",null,{"className":"font-mono","children":[103," LOC"]}],["$","span",null,{"children":[1," ","tools"]}]],["$","span",null,{"className":"rounded-full bg-zinc-100 px-2.5 py-0.5 text-xs dark:bg-zinc-800","children":"Todo manager and reminders"}]]}],["$","blockquote",null,{"className":"border-l-4 border-zinc-300 pl-4 text-sm italic text-zinc-500 dark:border-zinc-600 dark:text-zinc-400","children":"Plans become runtime state the agent can inspect and update."}]]}],["$","$L2",null,{"lessonId":"L03","source":"$3","filename":"lesson03_todo_write.rs"}],"$L4"]}],["$L5","$L6"],"$L7"]}],"loading":null,"isPartial":false}
+4:["$","nav",null,{"className":"flex items-center justify-between border-t border-zinc-200 pt-6 dark:border-zinc-700","children":[["$","$L8",null,{"href":"/en/L02","className":"group flex items-center gap-2 text-sm text-zinc-500 transition-colors hover:text-zinc-900 dark:hover:text-white","children":[["$","span",null,{"className":"transition-transform group-hover:-translate-x-1","children":"←"}],["$","div",null,{"children":[["$","div",null,{"className":"text-xs text-zinc-400","children":"Previous"}],["$","div",null,{"className":"font-medium","children":["L02"," - ","Tool Dispatch"]}]]}]]}],["$","$L8",null,{"href":"/en/L04","className":"group flex items-center gap-2 text-right text-sm text-zinc-500 transition-colors hover:text-zinc-900 dark:hover:text-white","children":[["$","div",null,{"children":[["$","div",null,{"className":"text-xs text-zinc-400","children":"Next"}],["$","div",null,{"className":"font-medium","children":["Subagents"," - ","L04"]}]]}],["$","span",null,{"className":"transition-transform group-hover:translate-x-1","children":"→"}]]}]]}]
+5:["$","script","script-0",{"src":"/rust-ai-agent-learning/_next/static/chunks/85f229d7e92be779.js","async":true}]
+6:["$","script","script-1",{"src":"/rust-ai-agent-learning/_next/static/chunks/bf8e79ee9995df45.js","async":true}]
+7:["$","$L9",null,{"children":["$","$a",null,{"name":"Next.MetadataOutlet","children":"$@b"}]}]
+b:null

@@ -1,0 +1,70 @@
+1:"$Sreact.fragment"
+2:I[58810,["/rust-ai-agent-learning/_next/static/chunks/cb90481590623a88.js","/rust-ai-agent-learning/_next/static/chunks/b1d20a9f176e53db.js","/rust-ai-agent-learning/_next/static/chunks/85f229d7e92be779.js","/rust-ai-agent-learning/_next/static/chunks/bf8e79ee9995df45.js"],"LessonDetailClient"]
+4:I[22016,["/rust-ai-agent-learning/_next/static/chunks/cb90481590623a88.js","/rust-ai-agent-learning/_next/static/chunks/b1d20a9f176e53db.js","/rust-ai-agent-learning/_next/static/chunks/85f229d7e92be779.js","/rust-ai-agent-learning/_next/static/chunks/bf8e79ee9995df45.js"],""]
+a:I[97367,["/rust-ai-agent-learning/_next/static/chunks/ff1a16fafef87110.js","/rust-ai-agent-learning/_next/static/chunks/0bd6498bda341889.js"],"OutletBoundary"]
+b:"$Sreact.suspense"
+3:T5e4,use crate::runtime::{Task, TaskManager, TaskStatus};
+use anyhow::Result;
+use serde::{Deserialize, Serialize};
+
+pub fn identity_block(name: &str, role: &str) -> String {
+    format!("<identity>\nname: {name}\nrole: {role}\n</identity>")
+}
+
+pub fn claim_next_ready_task(tasks: &TaskManager, owner: &str) -> Result<Option<Task>> {
+    for task in tasks.list()? {
+        if task.status == TaskStatus::Pending && task.blocked_by.is_empty() && task.owner.is_none()
+        {
+            return Ok(Some(tasks.claim(task.id, owner)?));
+        }
+    }
+    Ok(None)
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub enum IdleDecision {
+    ResumeFromInbox(String),
+    ClaimTask(Task),
+    StayIdle,
+}
+
+pub struct AutonomousPolicy {
+    pub name: String,
+    pub role: String,
+}
+
+impl AutonomousPolicy {
+    pub fn new(name: &str, role: &str) -> Self {
+        Self {
+            name: name.to_string(),
+            role: role.to_string(),
+        }
+    }
+
+    pub fn identity_message(&self) -> String {
+        identity_block(&self.name, &self.role)
+    }
+
+    pub fn decide(
+        &self,
+        tasks: &TaskManager,
+        inbox_messages: Vec<String>,
+    ) -> Result<IdleDecision> {
+        if let Some(message) = inbox_messages.into_iter().next() {
+            return Ok(IdleDecision::ResumeFromInbox(message));
+        }
+
+        if let Some(task) = claim_next_ready_task(tasks, &self.name)? {
+            return Ok(IdleDecision::ClaimTask(task));
+        }
+
+        Ok(IdleDecision::StayIdle)
+    }
+}
+0:{"buildId":"K2_NoIaMKUO_YN4A9Ojf9","rsc":["$","$1","c",{"children":[["$","div",null,{"className":"mx-auto max-w-3xl space-y-10 py-4","children":[["$","header",null,{"className":"space-y-3","children":[["$","div",null,{"className":"flex flex-wrap items-center gap-3","children":[["$","span",null,{"className":"rounded-lg bg-zinc-100 px-3 py-1 font-mono text-lg font-bold dark:bg-zinc-800","children":"L11"}],["$","h1",null,{"className":"text-2xl font-bold sm:text-3xl","children":"Autonomous Agents"}],["$","span",null,{"className":"inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300","children":"Collaboration"}]]}],["$","p",null,{"className":"text-lg text-zinc-500 dark:text-zinc-400","children":"Idle Policy"}],["$","div",null,{"className":"flex flex-wrap items-center gap-4 text-sm text-zinc-500 dark:text-zinc-400","children":[[["$","span",null,{"className":"font-mono","children":[49," LOC"]}],["$","span",null,{"children":[0," ","tools"]}]],["$","span",null,{"className":"rounded-full bg-zinc-100 px-2.5 py-0.5 text-xs dark:bg-zinc-800","children":"Inbox polling and task claiming"}]]}],["$","blockquote",null,{"className":"border-l-4 border-zinc-300 pl-4 text-sm italic text-zinc-500 dark:border-zinc-600 dark:text-zinc-400","children":"Autonomy appears in the idle loop: read, scan, claim, resume."}]]}],["$","$L2",null,{"lessonId":"L11","source":"$3","filename":"lesson11_autonomous_agents.rs"}],["$","nav",null,{"className":"flex items-center justify-between border-t border-zinc-200 pt-6 dark:border-zinc-700","children":[["$","$L4",null,{"href":"/en/L10","className":"group flex items-center gap-2 text-sm text-zinc-500 transition-colors hover:text-zinc-900 dark:hover:text-white","children":[["$","span",null,{"className":"transition-transform group-hover:-translate-x-1","children":"←"}],["$","div",null,{"children":[["$","div",null,{"className":"text-xs text-zinc-400","children":"Previous"}],["$","div",null,{"className":"font-medium","children":["L10"," - ","Team Protocols"]}]]}]]}],["$","$L4",null,{"href":"/en/L12","className":"group flex items-center gap-2 text-right text-sm text-zinc-500 transition-colors hover:text-zinc-900 dark:hover:text-white","children":["$L5","$L6"]}]]}]]}],["$L7","$L8"],"$L9"]}],"loading":null,"isPartial":false}
+5:["$","div",null,{"children":[["$","div",null,{"className":"text-xs text-zinc-400","children":"Next"}],["$","div",null,{"className":"font-medium","children":["Worktree Isolation"," - ","L12"]}]]}]
+6:["$","span",null,{"className":"transition-transform group-hover:translate-x-1","children":"→"}]
+7:["$","script","script-0",{"src":"/rust-ai-agent-learning/_next/static/chunks/85f229d7e92be779.js","async":true}]
+8:["$","script","script-1",{"src":"/rust-ai-agent-learning/_next/static/chunks/bf8e79ee9995df45.js","async":true}]
+9:["$","$La",null,{"children":["$","$b",null,{"name":"Next.MetadataOutlet","children":"$@c"}]}]
+c:null

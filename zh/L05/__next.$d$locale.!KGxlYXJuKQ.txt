@@ -1,0 +1,5 @@
+1:"$Sreact.fragment"
+2:I[95914,["/rust-ai-agent-learning/_next/static/chunks/cb90481590623a88.js","/rust-ai-agent-learning/_next/static/chunks/b1d20a9f176e53db.js"],"Sidebar"]
+3:I[39756,["/rust-ai-agent-learning/_next/static/chunks/ff1a16fafef87110.js","/rust-ai-agent-learning/_next/static/chunks/0bd6498bda341889.js"],"default"]
+4:I[37457,["/rust-ai-agent-learning/_next/static/chunks/ff1a16fafef87110.js","/rust-ai-agent-learning/_next/static/chunks/0bd6498bda341889.js"],"default"]
+0:{"buildId":"K2_NoIaMKUO_YN4A9Ojf9","rsc":["$","$1","c",{"children":[[["$","script","script-0",{"src":"/rust-ai-agent-learning/_next/static/chunks/b1d20a9f176e53db.js","async":true}]],["$","div",null,{"className":"flex gap-8","children":[["$","$L2",null,{}],["$","div",null,{"className":"min-w-0 flex-1","children":["$","$L3",null,{"parallelRouterKey":"children","template":["$","$L4",null,{}]}]}]]}]]}],"loading":null,"isPartial":false}

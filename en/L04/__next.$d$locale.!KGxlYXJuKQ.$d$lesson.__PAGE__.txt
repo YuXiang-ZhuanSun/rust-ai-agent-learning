@@ -1,0 +1,56 @@
+1:"$Sreact.fragment"
+2:I[58810,["/rust-ai-agent-learning/_next/static/chunks/cb90481590623a88.js","/rust-ai-agent-learning/_next/static/chunks/b1d20a9f176e53db.js","/rust-ai-agent-learning/_next/static/chunks/85f229d7e92be779.js","/rust-ai-agent-learning/_next/static/chunks/bf8e79ee9995df45.js"],"LessonDetailClient"]
+4:I[22016,["/rust-ai-agent-learning/_next/static/chunks/cb90481590623a88.js","/rust-ai-agent-learning/_next/static/chunks/b1d20a9f176e53db.js","/rust-ai-agent-learning/_next/static/chunks/85f229d7e92be779.js","/rust-ai-agent-learning/_next/static/chunks/bf8e79ee9995df45.js"],""]
+b:I[97367,["/rust-ai-agent-learning/_next/static/chunks/ff1a16fafef87110.js","/rust-ai-agent-learning/_next/static/chunks/0bd6498bda341889.js"],"OutletBoundary"]
+c:"$Sreact.suspense"
+3:T579,use crate::lessons::lesson02_tools::ToolRegistry;
+use crate::openai::{ChatMessage, OpenAiClient};
+use anyhow::Result;
+use std::path::PathBuf;
+
+pub struct Subagent {
+    client: OpenAiClient,
+    tools: ToolRegistry,
+}
+
+impl Subagent {
+    pub fn new(client: OpenAiClient, workspace: PathBuf) -> Self {
+        Self {
+            client,
+            tools: ToolRegistry::new(workspace),
+        }
+    }
+
+    pub async fn run(&self, prompt: &str, agent_type: &str) -> Result<String> {
+        let mut messages = vec![
+            ChatMessage::system(format!(
+                "You are a focused {agent_type} subagent. Work independently and return a short summary."
+            )),
+            ChatMessage::user(prompt),
+        ];
+
+        for _ in 0..12 {
+            let reply = self.client.chat(&messages, &self.tools.specs()).await?;
+            if let Some(calls) = &reply.tool_calls {
+                messages.push(reply.clone());
+                for call in calls {
+                    let args = serde_json::from_str(&call.function.arguments)?;
+                    let output = self.tools.execute(&call.function.name, args)?;
+                    messages.push(ChatMessage::tool(&call.id, output));
+                }
+            } else {
+                return Ok(reply.text().to_string());
+            }
+        }
+        Ok("subagent stopped after the safety round limit".to_string())
+    }
+}
+
+0:{"buildId":"K2_NoIaMKUO_YN4A9Ojf9","rsc":["$","$1","c",{"children":[["$","div",null,{"className":"mx-auto max-w-3xl space-y-10 py-4","children":[["$","header",null,{"className":"space-y-3","children":[["$","div",null,{"className":"flex flex-wrap items-center gap-3","children":[["$","span",null,{"className":"rounded-lg bg-zinc-100 px-3 py-1 font-mono text-lg font-bold dark:bg-zinc-800","children":"L04"}],["$","h1",null,{"className":"text-2xl font-bold sm:text-3xl","children":"Subagents"}],["$","span",null,{"className":"inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-300","children":"Planning & Coordination"}]]}],["$","p",null,{"className":"text-lg text-zinc-500 dark:text-zinc-400","children":"Isolated Context"}],["$","div",null,{"className":"flex flex-wrap items-center gap-4 text-sm text-zinc-500 dark:text-zinc-400","children":[[["$","span",null,{"className":"font-mono","children":[38," LOC"]}],["$","span",null,{"children":[0," ","tools"]}]],["$","span",null,{"className":"rounded-full bg-zinc-100 px-2.5 py-0.5 text-xs dark:bg-zinc-800","children":"Fresh context delegation"}]]}],["$","blockquote",null,{"className":"border-l-4 border-zinc-300 pl-4 text-sm italic text-zinc-500 dark:border-zinc-600 dark:text-zinc-400","children":"Delegation works when the child context is clean and the result is summarized."}]]}],["$","$L2",null,{"lessonId":"L04","source":"$3","filename":"lesson04_subagent.rs"}],["$","nav",null,{"className":"flex items-center justify-between border-t border-zinc-200 pt-6 dark:border-zinc-700","children":[["$","$L4",null,{"href":"/en/L03","className":"group flex items-center gap-2 text-sm text-zinc-500 transition-colors hover:text-zinc-900 dark:hover:text-white","children":[["$","span",null,{"className":"transition-transform group-hover:-translate-x-1","children":"←"}],["$","div",null,{"children":[["$","div",null,{"className":"text-xs text-zinc-400","children":"Previous"}],["$","div",null,{"className":"font-medium","children":["L03"," - ","TodoWrite"]}]]}]]}],["$","$L4",null,{"href":"/en/L05","className":"group flex items-center gap-2 text-right text-sm text-zinc-500 transition-colors hover:text-zinc-900 dark:hover:text-white","children":[["$","div",null,{"children":["$L5","$L6"]}],"$L7"]}]]}]]}],["$L8","$L9"],"$La"]}],"loading":null,"isPartial":false}
+5:["$","div",null,{"className":"text-xs text-zinc-400","children":"Next"}]
+6:["$","div",null,{"className":"font-medium","children":["Skills"," - ","L05"]}]
+7:["$","span",null,{"className":"transition-transform group-hover:translate-x-1","children":"→"}]
+8:["$","script","script-0",{"src":"/rust-ai-agent-learning/_next/static/chunks/85f229d7e92be779.js","async":true}]
+9:["$","script","script-1",{"src":"/rust-ai-agent-learning/_next/static/chunks/bf8e79ee9995df45.js","async":true}]
+a:["$","$Lb",null,{"children":["$","$c",null,{"name":"Next.MetadataOutlet","children":"$@d"}]}]
+d:null

@@ -1,0 +1,140 @@
+1:"$Sreact.fragment"
+2:I[39756,["/rust-ai-agent-learning/_next/static/chunks/ff1a16fafef87110.js","/rust-ai-agent-learning/_next/static/chunks/0bd6498bda341889.js"],"default"]
+3:I[37457,["/rust-ai-agent-learning/_next/static/chunks/ff1a16fafef87110.js","/rust-ai-agent-learning/_next/static/chunks/0bd6498bda341889.js"],"default"]
+5:I[95914,["/rust-ai-agent-learning/_next/static/chunks/cb90481590623a88.js","/rust-ai-agent-learning/_next/static/chunks/b1d20a9f176e53db.js"],"Sidebar"]
+7:I[97367,["/rust-ai-agent-learning/_next/static/chunks/ff1a16fafef87110.js","/rust-ai-agent-learning/_next/static/chunks/0bd6498bda341889.js"],"OutletBoundary"]
+8:"$Sreact.suspense"
+a:I[97367,["/rust-ai-agent-learning/_next/static/chunks/ff1a16fafef87110.js","/rust-ai-agent-learning/_next/static/chunks/0bd6498bda341889.js"],"ViewportBoundary"]
+c:I[97367,["/rust-ai-agent-learning/_next/static/chunks/ff1a16fafef87110.js","/rust-ai-agent-learning/_next/static/chunks/0bd6498bda341889.js"],"MetadataBoundary"]
+e:I[68027,["/rust-ai-agent-learning/_next/static/chunks/ff1a16fafef87110.js","/rust-ai-agent-learning/_next/static/chunks/0bd6498bda341889.js"],"default"]
+:HL["/rust-ai-agent-learning/_next/static/chunks/98cc5079005af0dc.css","style"]
+0:{"P":null,"b":"K2_NoIaMKUO_YN4A9Ojf9","c":["","en","L02",""],"q":"","i":false,"f":[[["",{"children":[["locale","en","d"],{"children":["(learn)",{"children":[["lesson","L02","d"],{"children":["__PAGE__",{}]}]}]},"$undefined","$undefined",true]}],[["$","$1","c",{"children":[null,["$","$L2",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L3",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":[[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":{"fontFamily":"system-ui,\"Segoe UI\",Roboto,Helvetica,Arial,sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\"","height":"100vh","textAlign":"center","display":"flex","flexDirection":"column","alignItems":"center","justifyContent":"center"},"children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":{"display":"inline-block","margin":"0 20px 0 0","padding":"0 23px 0 0","fontSize":24,"fontWeight":500,"verticalAlign":"top","lineHeight":"49px"},"children":404}],["$","div",null,{"style":{"display":"inline-block"},"children":["$","h2",null,{"style":{"fontSize":14,"fontWeight":400,"lineHeight":"49px","margin":0},"children":"This page could not be found."}]}]]}]}]],[]],"forbidden":"$undefined","unauthorized":"$undefined"}]]}],{"children":[["$","$1","c",{"children":[[["$","link","0",{"rel":"stylesheet","href":"/rust-ai-agent-learning/_next/static/chunks/98cc5079005af0dc.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}],["$","script","script-0",{"src":"/rust-ai-agent-learning/_next/static/chunks/cb90481590623a88.js","async":true,"nonce":"$undefined"}]],"$L4"]}],{"children":[["$","$1","c",{"children":[[["$","script","script-0",{"src":"/rust-ai-agent-learning/_next/static/chunks/b1d20a9f176e53db.js","async":true,"nonce":"$undefined"}]],["$","div",null,{"className":"flex gap-8","children":[["$","$L5",null,{}],["$","div",null,{"className":"min-w-0 flex-1","children":["$","$L2",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L3",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]}]]}]]}],{"children":[["$","$1","c",{"children":[null,["$","$L2",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L3",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}],{"children":[["$","$1","c",{"children":["$L6",[["$","script","script-0",{"src":"/rust-ai-agent-learning/_next/static/chunks/85f229d7e92be779.js","async":true,"nonce":"$undefined"}],["$","script","script-1",{"src":"/rust-ai-agent-learning/_next/static/chunks/bf8e79ee9995df45.js","async":true,"nonce":"$undefined"}]],["$","$L7",null,{"children":["$","$8",null,{"name":"Next.MetadataOutlet","children":"$@9"}]}]]}],{},null,false,false]},null,false,false]},null,false,false]},null,false,false]},null,false,false],["$","$1","h",{"children":[null,["$","$La",null,{"children":"$Lb"}],["$","div",null,{"hidden":true,"children":["$","$Lc",null,{"children":["$","$8",null,{"name":"Next.Metadata","children":"$Ld"}]}]}],null]}],false]],"m":"$undefined","G":["$e",[]],"S":true}
+f:I[33499,["/rust-ai-agent-learning/_next/static/chunks/cb90481590623a88.js"],"I18nProvider"]
+10:I[45872,["/rust-ai-agent-learning/_next/static/chunks/cb90481590623a88.js"],"Header"]
+11:I[58810,["/rust-ai-agent-learning/_next/static/chunks/cb90481590623a88.js","/rust-ai-agent-learning/_next/static/chunks/b1d20a9f176e53db.js","/rust-ai-agent-learning/_next/static/chunks/85f229d7e92be779.js","/rust-ai-agent-learning/_next/static/chunks/bf8e79ee9995df45.js"],"LessonDetailClient"]
+4:["$","html",null,{"lang":"en","suppressHydrationWarning":true,"children":[["$","head",null,{"children":["$","script",null,{"dangerouslySetInnerHTML":{"__html":"\n          (function() {\n            document.body && document.body.classList.add('no-transition');\n            var theme = localStorage.getItem('theme');\n            if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {\n              document.documentElement.classList.add('dark');\n            }\n            window.addEventListener('DOMContentLoaded', function() {\n              requestAnimationFrame(function() {\n                document.body.classList.remove('no-transition');\n              });\n            });\n          })();\n        "}}]}],["$","body",null,{"className":"flex min-h-screen flex-col bg-[var(--color-bg)] text-[var(--color-text)] antialiased","children":["$","$Lf",null,{"locale":"en","children":[["$","$L10",null,{}],["$","main",null,{"className":"mx-auto w-full max-w-7xl flex-1 px-4 py-8 sm:px-6 lg:px-8","children":["$","$L2",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L3",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]}],["$","footer",null,{"className":"border-t border-[var(--color-border)] bg-[var(--color-bg)]","children":["$","div",null,{"className":"mx-auto flex max-w-7xl items-center justify-between px-4 py-6 sm:px-6 lg:px-8","children":["$","p",null,{"className":"text-xs text-zinc-400 dark:text-zinc-500","children":"(c) 2025 AI Agent Learning"}]}]}]]}]}]]}]
+12:Tfa2,use crate::openai::ToolSpec;
+use crate::runtime::run_shell;
+use anyhow::{anyhow, Context, Result};
+use serde_json::{json, Value};
+use std::collections::BTreeMap;
+use std::fs;
+use std::path::{Component, Path, PathBuf};
+
+pub type ToolHandler = fn(&Path, Value) -> Result<String>;
+
+#[derive(Clone)]
+pub struct ToolRegistry {
+    root: PathBuf,
+    handlers: BTreeMap<String, ToolHandler>,
+}
+
+impl ToolRegistry {
+    pub fn new(root: impl Into<PathBuf>) -> Self {
+        let mut registry = Self {
+            root: root.into(),
+            handlers: BTreeMap::new(),
+        };
+        registry.add("bash", bash);
+        registry.add("read_file", read_file);
+        registry.add("write_file", write_file);
+        registry.add("edit_file", edit_file);
+        registry
+    }
+
+    pub fn add(&mut self, name: &str, handler: ToolHandler) {
+        self.handlers.insert(name.to_string(), handler);
+    }
+
+    pub fn execute(&self, name: &str, args: Value) -> Result<String> {
+        let handler = self
+            .handlers
+            .get(name)
+            .ok_or_else(|| anyhow!("unknown tool: {name}"))?;
+        handler(&self.root, args)
+    }
+
+    pub fn specs(&self) -> Vec<ToolSpec> {
+        vec![
+            ToolSpec::object(
+                "bash",
+                "Run a shell command in the workspace.",
+                json!({ "command": { "type": "string" }, "timeout_secs": { "type": "integer" } }),
+                &["command"],
+            ),
+            ToolSpec::object(
+                "read_file",
+                "Read a UTF-8 file from the workspace.",
+                json!({ "path": { "type": "string" } }),
+                &["path"],
+            ),
+            ToolSpec::object(
+                "write_file",
+                "Write a UTF-8 file inside the workspace.",
+                json!({ "path": { "type": "string" }, "content": { "type": "string" } }),
+                &["path", "content"],
+            ),
+            ToolSpec::object(
+                "edit_file",
+                "Replace an exact string in a UTF-8 file.",
+                json!({
+                    "path": { "type": "string" },
+                    "old": { "type": "string" },
+                    "new": { "type": "string" }
+                }),
+                &["path", "old", "new"],
+            ),
+        ]
+    }
+}
+
+fn workspace_path(root: &Path, raw: &str) -> Result<PathBuf> {
+    let requested = Path::new(raw);
+    if requested.is_absolute()
+        || requested
+            .components()
+            .any(|component| matches!(component, Component::ParentDir))
+    {
+        return Err(anyhow!("path escapes workspace: {raw}"));
+    }
+
+    let joined = root.join(requested);
+    let parent = joined.parent().unwrap_or(root);
+    fs::create_dir_all(parent)?;
+    Ok(joined)
+}
+
+fn bash(_root: &Path, args: Value) -> Result<String> {
+    let command = args["command"].as_str().context("missing command")?;
+    let timeout = args["timeout_secs"].as_u64().unwrap_or(30);
+    Ok(run_shell(command, timeout))
+}
+
+fn read_file(root: &Path, args: Value) -> Result<String> {
+    let path = workspace_path(root, args["path"].as_str().context("missing path")?)?;
+    fs::read_to_string(&path).with_context(|| format!("reading {}", path.display()))
+}
+
+fn write_file(root: &Path, args: Value) -> Result<String> {
+    let path = workspace_path(root, args["path"].as_str().context("missing path")?)?;
+    fs::write(&path, args["content"].as_str().unwrap_or_default())?;
+    Ok(format!("wrote {}", path.display()))
+}
+
+fn edit_file(root: &Path, args: Value) -> Result<String> {
+    let path = workspace_path(root, args["path"].as_str().context("missing path")?)?;
+    let old = args["old"].as_str().context("missing old")?;
+    let new = args["new"].as_str().context("missing new")?;
+    let text = fs::read_to_string(&path)?;
+    if !text.contains(old) {
+        return Err(anyhow!("old text not found"));
+    }
+    fs::write(&path, text.replacen(old, new, 1))?;
+    Ok(format!("edited {}", path.display()))
+}
+6:["$","div",null,{"className":"mx-auto max-w-3xl space-y-10 py-4","children":[["$","header",null,{"className":"space-y-3","children":[["$","div",null,{"className":"flex flex-wrap items-center gap-3","children":[["$","span",null,{"className":"rounded-lg bg-zinc-100 px-3 py-1 font-mono text-lg font-bold dark:bg-zinc-800","children":"L02"}],["$","h1",null,{"className":"text-2xl font-bold sm:text-3xl","children":"Tool Dispatch"}],["$","span",null,{"className":"inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300","children":"Tools & Execution"}]]}],["$","p",null,{"className":"text-lg text-zinc-500 dark:text-zinc-400","children":"Register Handlers"}],["$","div",null,{"className":"flex flex-wrap items-center gap-4 text-sm text-zinc-500 dark:text-zinc-400","children":[[["$","span",null,{"className":"font-mono","children":[107," LOC"]}],["$","span",null,{"children":[4," ","tools"]}]],["$","span",null,{"className":"rounded-full bg-zinc-100 px-2.5 py-0.5 text-xs dark:bg-zinc-800","children":"Dispatch map for file and shell tools"}]]}],["$","blockquote",null,{"className":"border-l-4 border-zinc-300 pl-4 text-sm italic text-zinc-500 dark:border-zinc-600 dark:text-zinc-400","children":"Adding tools should not change the loop."}]]}],["$","$L11",null,{"lessonId":"L02","source":"$12","filename":"lesson02_tools.rs"}],"$L13"]}]
+14:I[22016,["/rust-ai-agent-learning/_next/static/chunks/cb90481590623a88.js","/rust-ai-agent-learning/_next/static/chunks/b1d20a9f176e53db.js","/rust-ai-agent-learning/_next/static/chunks/85f229d7e92be779.js","/rust-ai-agent-learning/_next/static/chunks/bf8e79ee9995df45.js"],""]
+13:["$","nav",null,{"className":"flex items-center justify-between border-t border-zinc-200 pt-6 dark:border-zinc-700","children":[["$","$L14",null,{"href":"/en/L01","className":"group flex items-center gap-2 text-sm text-zinc-500 transition-colors hover:text-zinc-900 dark:hover:text-white","children":[["$","span",null,{"className":"transition-transform group-hover:-translate-x-1","children":"←"}],["$","div",null,{"children":[["$","div",null,{"className":"text-xs text-zinc-400","children":"Previous"}],["$","div",null,{"className":"font-medium","children":["L01"," - ","Tool Calling"]}]]}]]}],["$","$L14",null,{"href":"/en/L03","className":"group flex items-center gap-2 text-right text-sm text-zinc-500 transition-colors hover:text-zinc-900 dark:hover:text-white","children":[["$","div",null,{"children":[["$","div",null,{"className":"text-xs text-zinc-400","children":"Next"}],["$","div",null,{"className":"font-medium","children":["TodoWrite"," - ","L03"]}]]}],["$","span",null,{"className":"transition-transform group-hover:translate-x-1","children":"→"}]]}]]}]
+b:[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1"}]]
+9:null
+d:[["$","title","0",{"children":"AI Agent Learning"}],["$","meta","1",{"name":"description","content":"Build AI agents from scratch in Rust across 14 progressive lessons"}]]

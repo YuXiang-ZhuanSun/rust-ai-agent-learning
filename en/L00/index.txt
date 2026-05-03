@@ -1,0 +1,112 @@
+1:"$Sreact.fragment"
+2:I[39756,["/rust-ai-agent-learning/_next/static/chunks/ff1a16fafef87110.js","/rust-ai-agent-learning/_next/static/chunks/0bd6498bda341889.js"],"default"]
+3:I[37457,["/rust-ai-agent-learning/_next/static/chunks/ff1a16fafef87110.js","/rust-ai-agent-learning/_next/static/chunks/0bd6498bda341889.js"],"default"]
+5:I[95914,["/rust-ai-agent-learning/_next/static/chunks/cb90481590623a88.js","/rust-ai-agent-learning/_next/static/chunks/b1d20a9f176e53db.js"],"Sidebar"]
+7:I[97367,["/rust-ai-agent-learning/_next/static/chunks/ff1a16fafef87110.js","/rust-ai-agent-learning/_next/static/chunks/0bd6498bda341889.js"],"OutletBoundary"]
+8:"$Sreact.suspense"
+a:I[97367,["/rust-ai-agent-learning/_next/static/chunks/ff1a16fafef87110.js","/rust-ai-agent-learning/_next/static/chunks/0bd6498bda341889.js"],"ViewportBoundary"]
+c:I[97367,["/rust-ai-agent-learning/_next/static/chunks/ff1a16fafef87110.js","/rust-ai-agent-learning/_next/static/chunks/0bd6498bda341889.js"],"MetadataBoundary"]
+e:I[68027,["/rust-ai-agent-learning/_next/static/chunks/ff1a16fafef87110.js","/rust-ai-agent-learning/_next/static/chunks/0bd6498bda341889.js"],"default"]
+:HL["/rust-ai-agent-learning/_next/static/chunks/98cc5079005af0dc.css","style"]
+0:{"P":null,"b":"K2_NoIaMKUO_YN4A9Ojf9","c":["","en","L00",""],"q":"","i":false,"f":[[["",{"children":[["locale","en","d"],{"children":["(learn)",{"children":[["lesson","L00","d"],{"children":["__PAGE__",{}]}]}]},"$undefined","$undefined",true]}],[["$","$1","c",{"children":[null,["$","$L2",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L3",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":[[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":{"fontFamily":"system-ui,\"Segoe UI\",Roboto,Helvetica,Arial,sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\"","height":"100vh","textAlign":"center","display":"flex","flexDirection":"column","alignItems":"center","justifyContent":"center"},"children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":{"display":"inline-block","margin":"0 20px 0 0","padding":"0 23px 0 0","fontSize":24,"fontWeight":500,"verticalAlign":"top","lineHeight":"49px"},"children":404}],["$","div",null,{"style":{"display":"inline-block"},"children":["$","h2",null,{"style":{"fontSize":14,"fontWeight":400,"lineHeight":"49px","margin":0},"children":"This page could not be found."}]}]]}]}]],[]],"forbidden":"$undefined","unauthorized":"$undefined"}]]}],{"children":[["$","$1","c",{"children":[[["$","link","0",{"rel":"stylesheet","href":"/rust-ai-agent-learning/_next/static/chunks/98cc5079005af0dc.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}],["$","script","script-0",{"src":"/rust-ai-agent-learning/_next/static/chunks/cb90481590623a88.js","async":true,"nonce":"$undefined"}]],"$L4"]}],{"children":[["$","$1","c",{"children":[[["$","script","script-0",{"src":"/rust-ai-agent-learning/_next/static/chunks/b1d20a9f176e53db.js","async":true,"nonce":"$undefined"}]],["$","div",null,{"className":"flex gap-8","children":[["$","$L5",null,{}],["$","div",null,{"className":"min-w-0 flex-1","children":["$","$L2",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L3",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]}]]}]]}],{"children":[["$","$1","c",{"children":[null,["$","$L2",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L3",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}],{"children":[["$","$1","c",{"children":["$L6",[["$","script","script-0",{"src":"/rust-ai-agent-learning/_next/static/chunks/85f229d7e92be779.js","async":true,"nonce":"$undefined"}],["$","script","script-1",{"src":"/rust-ai-agent-learning/_next/static/chunks/bf8e79ee9995df45.js","async":true,"nonce":"$undefined"}]],["$","$L7",null,{"children":["$","$8",null,{"name":"Next.MetadataOutlet","children":"$@9"}]}]]}],{},null,false,false]},null,false,false]},null,false,false]},null,false,false]},null,false,false],["$","$1","h",{"children":[null,["$","$La",null,{"children":"$Lb"}],["$","div",null,{"hidden":true,"children":["$","$Lc",null,{"children":["$","$8",null,{"name":"Next.Metadata","children":"$Ld"}]}]}],null]}],false]],"m":"$undefined","G":["$e",[]],"S":true}
+f:I[33499,["/rust-ai-agent-learning/_next/static/chunks/cb90481590623a88.js"],"I18nProvider"]
+10:I[45872,["/rust-ai-agent-learning/_next/static/chunks/cb90481590623a88.js"],"Header"]
+11:I[58810,["/rust-ai-agent-learning/_next/static/chunks/cb90481590623a88.js","/rust-ai-agent-learning/_next/static/chunks/b1d20a9f176e53db.js","/rust-ai-agent-learning/_next/static/chunks/85f229d7e92be779.js","/rust-ai-agent-learning/_next/static/chunks/bf8e79ee9995df45.js"],"LessonDetailClient"]
+4:["$","html",null,{"lang":"en","suppressHydrationWarning":true,"children":[["$","head",null,{"children":["$","script",null,{"dangerouslySetInnerHTML":{"__html":"\n          (function() {\n            document.body && document.body.classList.add('no-transition');\n            var theme = localStorage.getItem('theme');\n            if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {\n              document.documentElement.classList.add('dark');\n            }\n            window.addEventListener('DOMContentLoaded', function() {\n              requestAnimationFrame(function() {\n                document.body.classList.remove('no-transition');\n              });\n            });\n          })();\n        "}}]}],["$","body",null,{"className":"flex min-h-screen flex-col bg-[var(--color-bg)] text-[var(--color-text)] antialiased","children":["$","$Lf",null,{"locale":"en","children":[["$","$L10",null,{}],["$","main",null,{"className":"mx-auto w-full max-w-7xl flex-1 px-4 py-8 sm:px-6 lg:px-8","children":["$","$L2",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L3",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]}],["$","footer",null,{"className":"border-t border-[var(--color-border)] bg-[var(--color-bg)]","children":["$","div",null,{"className":"mx-auto flex max-w-7xl items-center justify-between px-4 py-6 sm:px-6 lg:px-8","children":["$","p",null,{"className":"text-xs text-zinc-400 dark:text-zinc-500","children":"(c) 2025 AI Agent Learning"}]}]}]]}]}]]}]
+12:Tb3e,use crate::openai::{ChatMessage, OpenAiClient, ToolSpec};
+use anyhow::Result;
+use serde_json::{json, Value};
+use std::process::Command;
+
+const SYSTEM: &str = "You are a coding agent in the current workspace. Use bash to solve tasks. Act, then explain briefly.";
+const MAX_ROUNDS: usize = 30;
+
+pub fn bash_tool() -> ToolSpec {
+    ToolSpec::object(
+        "bash",
+        "Run a shell command in the current workspace.",
+        json!({
+            "command": {
+                "type": "string",
+                "description": "The shell command to run"
+            }
+        }),
+        &["command"],
+    )
+}
+
+pub fn run_bash(command: &str) -> String {
+    let blocked = ["rm -rf /", "sudo ", "shutdown", "reboot", "> /dev/"];
+    if blocked.iter().any(|needle| command.contains(needle)) {
+        return "Error: dangerous command blocked".to_string();
+    }
+
+    let output = if cfg!(windows) {
+        Command::new("powershell")
+            .args(["-NoProfile", "-Command", command])
+            .output()
+    } else {
+        Command::new("sh").arg("-c").arg(command).output()
+    };
+
+    match output {
+        Ok(output) => {
+            let mut text = String::new();
+            text.push_str(&String::from_utf8_lossy(&output.stdout));
+            text.push_str(&String::from_utf8_lossy(&output.stderr));
+            let text = text.trim();
+            if text.is_empty() {
+                "(no output)".to_string()
+            } else {
+                text.chars().take(50_000).collect()
+            }
+        }
+        Err(err) => format!("Error: {err}"),
+    }
+}
+
+pub async fn agent_loop(client: &OpenAiClient, messages: &mut Vec<ChatMessage>) -> Result<()> {
+    let tools = vec![bash_tool()];
+
+    for _ in 0..MAX_ROUNDS {
+        let response = client.chat(messages, &tools).await?;
+        let tool_calls = response.tool_calls.clone().unwrap_or_default();
+        messages.push(response);
+
+        if tool_calls.is_empty() {
+            return Ok(());
+        }
+
+        for call in tool_calls {
+            let args: Value = serde_json::from_str(&call.function.arguments)?;
+            let command = args["command"].as_str().unwrap_or_default();
+            println!("$ {command}");
+            let output = run_bash(command);
+            println!("{}", output.chars().take(200).collect::<String>());
+            messages.push(ChatMessage::tool(call.id, output));
+        }
+    }
+
+    messages.push(ChatMessage::user(
+        "Stopped because the safety round limit was reached.",
+    ));
+    Ok(())
+}
+
+pub async fn run(prompt: &str) -> Result<String> {
+    let client = OpenAiClient::from_env()?;
+    let mut messages = vec![ChatMessage::system(SYSTEM), ChatMessage::user(prompt)];
+    agent_loop(&client, &mut messages).await?;
+    Ok(messages
+        .iter()
+        .rev()
+        .find_map(|message| message.content.clone())
+        .unwrap_or_default())
+}
+
+6:["$","div",null,{"className":"mx-auto max-w-3xl space-y-10 py-4","children":[["$","header",null,{"className":"space-y-3","children":[["$","div",null,{"className":"flex flex-wrap items-center gap-3","children":[["$","span",null,{"className":"rounded-lg bg-zinc-100 px-3 py-1 font-mono text-lg font-bold dark:bg-zinc-800","children":"L00"}],["$","h1",null,{"className":"text-2xl font-bold sm:text-3xl","children":"The Agent Loop"}],["$","span",null,{"className":"inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300","children":"Tools & Execution"}]]}],["$","p",null,{"className":"text-lg text-zinc-500 dark:text-zinc-400","children":"One Tool, One Loop"}],["$","div",null,{"className":"flex flex-wrap items-center gap-4 text-sm text-zinc-500 dark:text-zinc-400","children":[[["$","span",null,{"className":"font-mono","children":[79," LOC"]}],["$","span",null,{"children":[1," ","tools"]}]],["$","span",null,{"className":"rounded-full bg-zinc-100 px-2.5 py-0.5 text-xs dark:bg-zinc-800","children":"Bash tool + tool-result loop"}]]}],["$","blockquote",null,{"className":"border-l-4 border-zinc-300 pl-4 text-sm italic text-zinc-500 dark:border-zinc-600 dark:text-zinc-400","children":"A coding agent is a feedback loop between model, tools, and observations."}]]}],["$","$L11",null,{"lessonId":"L00","source":"$12","filename":"lesson00_basic_chat.rs"}],"$L13"]}]
+14:I[22016,["/rust-ai-agent-learning/_next/static/chunks/cb90481590623a88.js","/rust-ai-agent-learning/_next/static/chunks/b1d20a9f176e53db.js","/rust-ai-agent-learning/_next/static/chunks/85f229d7e92be779.js","/rust-ai-agent-learning/_next/static/chunks/bf8e79ee9995df45.js"],""]
+13:["$","nav",null,{"className":"flex items-center justify-between border-t border-zinc-200 pt-6 dark:border-zinc-700","children":[["$","div",null,{}],["$","$L14",null,{"href":"/en/L01","className":"group flex items-center gap-2 text-right text-sm text-zinc-500 transition-colors hover:text-zinc-900 dark:hover:text-white","children":[["$","div",null,{"children":[["$","div",null,{"className":"text-xs text-zinc-400","children":"Next"}],["$","div",null,{"className":"font-medium","children":["Tool Calling"," - ","L01"]}]]}],["$","span",null,{"className":"transition-transform group-hover:translate-x-1","children":"→"}]]}]]}]
+b:[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1"}]]
+9:null
+d:[["$","title","0",{"children":"AI Agent Learning"}],["$","meta","1",{"name":"description","content":"Build AI agents from scratch in Rust across 14 progressive lessons"}]]

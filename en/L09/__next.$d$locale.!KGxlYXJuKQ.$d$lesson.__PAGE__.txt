@@ -1,0 +1,54 @@
+1:"$Sreact.fragment"
+2:I[58810,["/rust-ai-agent-learning/_next/static/chunks/cb90481590623a88.js","/rust-ai-agent-learning/_next/static/chunks/b1d20a9f176e53db.js","/rust-ai-agent-learning/_next/static/chunks/85f229d7e92be779.js","/rust-ai-agent-learning/_next/static/chunks/bf8e79ee9995df45.js"],"LessonDetailClient"]
+4:I[22016,["/rust-ai-agent-learning/_next/static/chunks/cb90481590623a88.js","/rust-ai-agent-learning/_next/static/chunks/b1d20a9f176e53db.js","/rust-ai-agent-learning/_next/static/chunks/85f229d7e92be779.js","/rust-ai-agent-learning/_next/static/chunks/bf8e79ee9995df45.js"],""]
+7:I[97367,["/rust-ai-agent-learning/_next/static/chunks/ff1a16fafef87110.js","/rust-ai-agent-learning/_next/static/chunks/0bd6498bda341889.js"],"OutletBoundary"]
+8:"$Sreact.suspense"
+3:T4ac,use crate::runtime::{MessageBus, TaskManager};
+use anyhow::Result;
+use serde::{Deserialize, Serialize};
+use serde_json::json;
+use std::collections::BTreeMap;
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct Teammate {
+    pub name: String,
+    pub role: String,
+    pub prompt: String,
+}
+
+#[derive(Debug, Default, Clone)]
+pub struct TeammateManager {
+    teammates: BTreeMap<String, Teammate>,
+}
+
+impl TeammateManager {
+    pub fn spawn(&mut self, name: &str, role: &str, prompt: &str) -> String {
+        self.teammates.insert(
+            name.to_string(),
+            Teammate {
+                name: name.to_string(),
+                role: role.to_string(),
+                prompt: prompt.to_string(),
+            },
+        );
+        format!("spawned teammate {name} as {role}")
+    }
+
+    pub fn names(&self) -> Vec<String> {
+        self.teammates.keys().cloned().collect()
+    }
+}
+
+pub fn delegate(bus: &MessageBus, from: &str, to: &str, task: &str) -> Result<String> {
+    let msg = bus.send(from, to, "task", json!({ "task": task }))?;
+    Ok(msg.id)
+}
+
+pub fn board_snapshot(tasks: &TaskManager) -> Result<String> {
+    Ok(serde_json::to_string_pretty(&tasks.list()?)?)
+}
+
+0:{"buildId":"K2_NoIaMKUO_YN4A9Ojf9","rsc":["$","$1","c",{"children":[["$","div",null,{"className":"mx-auto max-w-3xl space-y-10 py-4","children":[["$","header",null,{"className":"space-y-3","children":[["$","div",null,{"className":"flex flex-wrap items-center gap-3","children":[["$","span",null,{"className":"rounded-lg bg-zinc-100 px-3 py-1 font-mono text-lg font-bold dark:bg-zinc-800","children":"L09"}],["$","h1",null,{"className":"text-2xl font-bold sm:text-3xl","children":"Agent Teams"}],["$","span",null,{"className":"inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300","children":"Collaboration"}]]}],["$","p",null,{"className":"text-lg text-zinc-500 dark:text-zinc-400","children":"Mailboxes"}],["$","div",null,{"className":"flex flex-wrap items-center gap-4 text-sm text-zinc-500 dark:text-zinc-400","children":[[["$","span",null,{"className":"font-mono","children":[38," LOC"]}],["$","span",null,{"children":[0," ","tools"]}]],["$","span",null,{"className":"rounded-full bg-zinc-100 px-2.5 py-0.5 text-xs dark:bg-zinc-800","children":"Teammates and JSONL inboxes"}]]}],["$","blockquote",null,{"className":"border-l-4 border-zinc-300 pl-4 text-sm italic text-zinc-500 dark:border-zinc-600 dark:text-zinc-400","children":"Teamwork needs durable identity and inspectable communication."}]]}],["$","$L2",null,{"lessonId":"L09","source":"$3","filename":"lesson09_agent_teams.rs"}],["$","nav",null,{"className":"flex items-center justify-between border-t border-zinc-200 pt-6 dark:border-zinc-700","children":[["$","$L4",null,{"href":"/en/L08","className":"group flex items-center gap-2 text-sm text-zinc-500 transition-colors hover:text-zinc-900 dark:hover:text-white","children":[["$","span",null,{"className":"transition-transform group-hover:-translate-x-1","children":"←"}],["$","div",null,{"children":[["$","div",null,{"className":"text-xs text-zinc-400","children":"Previous"}],["$","div",null,{"className":"font-medium","children":["L08"," - ","Background Tasks"]}]]}]]}],["$","$L4",null,{"href":"/en/L10","className":"group flex items-center gap-2 text-right text-sm text-zinc-500 transition-colors hover:text-zinc-900 dark:hover:text-white","children":[["$","div",null,{"children":[["$","div",null,{"className":"text-xs text-zinc-400","children":"Next"}],["$","div",null,{"className":"font-medium","children":["Team Protocols"," - ","L10"]}]]}],["$","span",null,{"className":"transition-transform group-hover:translate-x-1","children":"→"}]]}]]}]]}],[["$","script","script-0",{"src":"/rust-ai-agent-learning/_next/static/chunks/85f229d7e92be779.js","async":true}],"$L5"],"$L6"]}],"loading":null,"isPartial":false}
+5:["$","script","script-1",{"src":"/rust-ai-agent-learning/_next/static/chunks/bf8e79ee9995df45.js","async":true}]
+6:["$","$L7",null,{"children":["$","$8",null,{"name":"Next.MetadataOutlet","children":"$@9"}]}]
+9:null

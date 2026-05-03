@@ -1,0 +1,60 @@
+1:"$Sreact.fragment"
+2:I[58810,["/rust-ai-agent-learning/_next/static/chunks/cb90481590623a88.js","/rust-ai-agent-learning/_next/static/chunks/b1d20a9f176e53db.js","/rust-ai-agent-learning/_next/static/chunks/85f229d7e92be779.js","/rust-ai-agent-learning/_next/static/chunks/bf8e79ee9995df45.js"],"LessonDetailClient"]
+4:I[22016,["/rust-ai-agent-learning/_next/static/chunks/cb90481590623a88.js","/rust-ai-agent-learning/_next/static/chunks/b1d20a9f176e53db.js","/rust-ai-agent-learning/_next/static/chunks/85f229d7e92be779.js","/rust-ai-agent-learning/_next/static/chunks/bf8e79ee9995df45.js"],""]
+a:I[97367,["/rust-ai-agent-learning/_next/static/chunks/ff1a16fafef87110.js","/rust-ai-agent-learning/_next/static/chunks/0bd6498bda341889.js"],"OutletBoundary"]
+b:"$Sreact.suspense"
+3:T5ef,use crate::openai::ToolSpec;
+pub use crate::runtime::{Task, TaskManager, TaskStatus};
+use serde_json::json;
+
+pub fn task_tools() -> Vec<ToolSpec> {
+    vec![
+        ToolSpec::object(
+            "task_create",
+            "Create a persistent task on the task board.",
+            json!({
+                "subject": { "type": "string" },
+                "description": { "type": "string" }
+            }),
+            &["subject"],
+        ),
+        ToolSpec::object(
+            "task_update",
+            "Update task status and dependency edges.",
+            json!({
+                "id": { "type": "integer" },
+                "status": {
+                    "type": "string",
+                    "enum": ["pending", "in_progress", "blocked", "completed"]
+                },
+                "blocked_by": { "type": "array", "items": { "type": "integer" } },
+                "blocks": { "type": "array", "items": { "type": "integer" } }
+            }),
+            &["id"],
+        ),
+        ToolSpec::object(
+            "task_list",
+            "List all tasks with status and dependency summary.",
+            json!({}),
+            &[],
+        ),
+        ToolSpec::object(
+            "task_get",
+            "Read full details for one task.",
+            json!({ "id": { "type": "integer" } }),
+            &["id"],
+        ),
+    ]
+}
+
+pub fn explain_task_graph() -> &'static str {
+    "Tasks are durable goals. Dependencies tell the agent what is ready, what is blocked, and what can run in parallel."
+}
+
+0:{"buildId":"K2_NoIaMKUO_YN4A9Ojf9","rsc":["$","$1","c",{"children":[["$","div",null,{"className":"mx-auto max-w-3xl space-y-10 py-4","children":[["$","header",null,{"className":"space-y-3","children":[["$","div",null,{"className":"flex flex-wrap items-center gap-3","children":[["$","span",null,{"className":"rounded-lg bg-zinc-100 px-3 py-1 font-mono text-lg font-bold dark:bg-zinc-800","children":"L07"}],["$","h1",null,{"className":"text-2xl font-bold sm:text-3xl","children":"任务系统"}],["$","span",null,{"className":"inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-300","children":"规划与协调"}]]}],["$","p",null,{"className":"text-lg text-zinc-500 dark:text-zinc-400","children":"持久目标"}],["$","div",null,{"className":"flex flex-wrap items-center gap-4 text-sm text-zinc-500 dark:text-zinc-400","children":[[["$","span",null,{"className":"font-mono","children":[45," LOC"]}],["$","span",null,{"children":[4," ","个工具"]}]],["$","span",null,{"className":"rounded-full bg-zinc-100 px-2.5 py-0.5 text-xs dark:bg-zinc-800","children":"File-backed task graph"}]]}],["$","blockquote",null,{"className":"border-l-4 border-zinc-300 pl-4 text-sm italic text-zinc-500 dark:border-zinc-600 dark:text-zinc-400","children":"任务板是 Agent 工作的长期控制平面。"}]]}],["$","$L2",null,{"lessonId":"L07","source":"$3","filename":"lesson07_task_system.rs"}],["$","nav",null,{"className":"flex items-center justify-between border-t border-zinc-200 pt-6 dark:border-zinc-700","children":[["$","$L4",null,{"href":"/zh/L06","className":"group flex items-center gap-2 text-sm text-zinc-500 transition-colors hover:text-zinc-900 dark:hover:text-white","children":[["$","span",null,{"className":"transition-transform group-hover:-translate-x-1","children":"←"}],["$","div",null,{"children":[["$","div",null,{"className":"text-xs text-zinc-400","children":"上一课"}],["$","div",null,{"className":"font-medium","children":["L06"," - ","上下文压缩"]}]]}]]}],["$","$L4",null,{"href":"/zh/L08","className":"group flex items-center gap-2 text-right text-sm text-zinc-500 transition-colors hover:text-zinc-900 dark:hover:text-white","children":["$L5","$L6"]}]]}]]}],["$L7","$L8"],"$L9"]}],"loading":null,"isPartial":false}
+5:["$","div",null,{"children":[["$","div",null,{"className":"text-xs text-zinc-400","children":"下一课"}],["$","div",null,{"className":"font-medium","children":["后台任务"," - ","L08"]}]]}]
+6:["$","span",null,{"className":"transition-transform group-hover:translate-x-1","children":"→"}]
+7:["$","script","script-0",{"src":"/rust-ai-agent-learning/_next/static/chunks/85f229d7e92be779.js","async":true}]
+8:["$","script","script-1",{"src":"/rust-ai-agent-learning/_next/static/chunks/bf8e79ee9995df45.js","async":true}]
+9:["$","$La",null,{"children":["$","$b",null,{"name":"Next.MetadataOutlet","children":"$@c"}]}]
+c:null

@@ -1,0 +1,130 @@
+1:"$Sreact.fragment"
+2:I[58810,["/rust-ai-agent-learning/_next/static/chunks/cb90481590623a88.js","/rust-ai-agent-learning/_next/static/chunks/b1d20a9f176e53db.js","/rust-ai-agent-learning/_next/static/chunks/85f229d7e92be779.js","/rust-ai-agent-learning/_next/static/chunks/bf8e79ee9995df45.js"],"LessonDetailClient"]
+8:I[22016,["/rust-ai-agent-learning/_next/static/chunks/cb90481590623a88.js","/rust-ai-agent-learning/_next/static/chunks/b1d20a9f176e53db.js","/rust-ai-agent-learning/_next/static/chunks/85f229d7e92be779.js","/rust-ai-agent-learning/_next/static/chunks/bf8e79ee9995df45.js"],""]
+9:I[97367,["/rust-ai-agent-learning/_next/static/chunks/ff1a16fafef87110.js","/rust-ai-agent-learning/_next/static/chunks/0bd6498bda341889.js"],"OutletBoundary"]
+a:"$Sreact.suspense"
+3:Tfa2,use crate::openai::ToolSpec;
+use crate::runtime::run_shell;
+use anyhow::{anyhow, Context, Result};
+use serde_json::{json, Value};
+use std::collections::BTreeMap;
+use std::fs;
+use std::path::{Component, Path, PathBuf};
+
+pub type ToolHandler = fn(&Path, Value) -> Result<String>;
+
+#[derive(Clone)]
+pub struct ToolRegistry {
+    root: PathBuf,
+    handlers: BTreeMap<String, ToolHandler>,
+}
+
+impl ToolRegistry {
+    pub fn new(root: impl Into<PathBuf>) -> Self {
+        let mut registry = Self {
+            root: root.into(),
+            handlers: BTreeMap::new(),
+        };
+        registry.add("bash", bash);
+        registry.add("read_file", read_file);
+        registry.add("write_file", write_file);
+        registry.add("edit_file", edit_file);
+        registry
+    }
+
+    pub fn add(&mut self, name: &str, handler: ToolHandler) {
+        self.handlers.insert(name.to_string(), handler);
+    }
+
+    pub fn execute(&self, name: &str, args: Value) -> Result<String> {
+        let handler = self
+            .handlers
+            .get(name)
+            .ok_or_else(|| anyhow!("unknown tool: {name}"))?;
+        handler(&self.root, args)
+    }
+
+    pub fn specs(&self) -> Vec<ToolSpec> {
+        vec![
+            ToolSpec::object(
+                "bash",
+                "Run a shell command in the workspace.",
+                json!({ "command": { "type": "string" }, "timeout_secs": { "type": "integer" } }),
+                &["command"],
+            ),
+            ToolSpec::object(
+                "read_file",
+                "Read a UTF-8 file from the workspace.",
+                json!({ "path": { "type": "string" } }),
+                &["path"],
+            ),
+            ToolSpec::object(
+                "write_file",
+                "Write a UTF-8 file inside the workspace.",
+                json!({ "path": { "type": "string" }, "content": { "type": "string" } }),
+                &["path", "content"],
+            ),
+            ToolSpec::object(
+                "edit_file",
+                "Replace an exact string in a UTF-8 file.",
+                json!({
+                    "path": { "type": "string" },
+                    "old": { "type": "string" },
+                    "new": { "type": "string" }
+                }),
+                &["path", "old", "new"],
+            ),
+        ]
+    }
+}
+
+fn workspace_path(root: &Path, raw: &str) -> Result<PathBuf> {
+    let requested = Path::new(raw);
+    if requested.is_absolute()
+        || requested
+            .components()
+            .any(|component| matches!(component, Component::ParentDir))
+    {
+        return Err(anyhow!("path escapes workspace: {raw}"));
+    }
+
+    let joined = root.join(requested);
+    let parent = joined.parent().unwrap_or(root);
+    fs::create_dir_all(parent)?;
+    Ok(joined)
+}
+
+fn bash(_root: &Path, args: Value) -> Result<String> {
+    let command = args["command"].as_str().context("missing command")?;
+    let timeout = args["timeout_secs"].as_u64().unwrap_or(30);
+    Ok(run_shell(command, timeout))
+}
+
+fn read_file(root: &Path, args: Value) -> Result<String> {
+    let path = workspace_path(root, args["path"].as_str().context("missing path")?)?;
+    fs::read_to_string(&path).with_context(|| format!("reading {}", path.display()))
+}
+
+fn write_file(root: &Path, args: Value) -> Result<String> {
+    let path = workspace_path(root, args["path"].as_str().context("missing path")?)?;
+    fs::write(&path, args["content"].as_str().unwrap_or_default())?;
+    Ok(format!("wrote {}", path.display()))
+}
+
+fn edit_file(root: &Path, args: Value) -> Result<String> {
+    let path = workspace_path(root, args["path"].as_str().context("missing path")?)?;
+    let old = args["old"].as_str().context("missing old")?;
+    let new = args["new"].as_str().context("missing new")?;
+    let text = fs::read_to_string(&path)?;
+    if !text.contains(old) {
+        return Err(anyhow!("old text not found"));
+    }
+    fs::write(&path, text.replacen(old, new, 1))?;
+    Ok(format!("edited {}", path.display()))
+}
+0:{"buildId":"K2_NoIaMKUO_YN4A9Ojf9","rsc":["$","$1","c",{"children":[["$","div",null,{"className":"mx-auto max-w-3xl space-y-10 py-4","children":[["$","header",null,{"className":"space-y-3","children":[["$","div",null,{"className":"flex flex-wrap items-center gap-3","children":[["$","span",null,{"className":"rounded-lg bg-zinc-100 px-3 py-1 font-mono text-lg font-bold dark:bg-zinc-800","children":"L02"}],["$","h1",null,{"className":"text-2xl font-bold sm:text-3xl","children":"Tool Dispatch"}],["$","span",null,{"className":"inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300","children":"Tools & Execution"}]]}],["$","p",null,{"className":"text-lg text-zinc-500 dark:text-zinc-400","children":"Register Handlers"}],["$","div",null,{"className":"flex flex-wrap items-center gap-4 text-sm text-zinc-500 dark:text-zinc-400","children":[[["$","span",null,{"className":"font-mono","children":[107," LOC"]}],["$","span",null,{"children":[4," ","tools"]}]],["$","span",null,{"className":"rounded-full bg-zinc-100 px-2.5 py-0.5 text-xs dark:bg-zinc-800","children":"Dispatch map for file and shell tools"}]]}],["$","blockquote",null,{"className":"border-l-4 border-zinc-300 pl-4 text-sm italic text-zinc-500 dark:border-zinc-600 dark:text-zinc-400","children":"Adding tools should not change the loop."}]]}],["$","$L2",null,{"lessonId":"L02","source":"$3","filename":"lesson02_tools.rs"}],"$L4"]}],["$L5","$L6"],"$L7"]}],"loading":null,"isPartial":false}
+4:["$","nav",null,{"className":"flex items-center justify-between border-t border-zinc-200 pt-6 dark:border-zinc-700","children":[["$","$L8",null,{"href":"/en/L01","className":"group flex items-center gap-2 text-sm text-zinc-500 transition-colors hover:text-zinc-900 dark:hover:text-white","children":[["$","span",null,{"className":"transition-transform group-hover:-translate-x-1","children":"←"}],["$","div",null,{"children":[["$","div",null,{"className":"text-xs text-zinc-400","children":"Previous"}],["$","div",null,{"className":"font-medium","children":["L01"," - ","Tool Calling"]}]]}]]}],["$","$L8",null,{"href":"/en/L03","className":"group flex items-center gap-2 text-right text-sm text-zinc-500 transition-colors hover:text-zinc-900 dark:hover:text-white","children":[["$","div",null,{"children":[["$","div",null,{"className":"text-xs text-zinc-400","children":"Next"}],["$","div",null,{"className":"font-medium","children":["TodoWrite"," - ","L03"]}]]}],["$","span",null,{"className":"transition-transform group-hover:translate-x-1","children":"→"}]]}]]}]
+5:["$","script","script-0",{"src":"/rust-ai-agent-learning/_next/static/chunks/85f229d7e92be779.js","async":true}]
+6:["$","script","script-1",{"src":"/rust-ai-agent-learning/_next/static/chunks/bf8e79ee9995df45.js","async":true}]
+7:["$","$L9",null,{"children":["$","$a",null,{"name":"Next.MetadataOutlet","children":"$@b"}]}]
+b:null
