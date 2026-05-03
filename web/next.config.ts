@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  basePath: "/ai-agent-learning",
+  basePath: "/rust-ai-agent-learning",
   output: "export",
   trailingSlash: true,
   images: {
