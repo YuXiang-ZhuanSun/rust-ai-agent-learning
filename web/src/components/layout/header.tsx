@@ -95,7 +95,7 @@ export function Header() {
           </button>
 
           <a
-            href="https://github.com/wukangxin/ai-agent-learning"
+            href="https://github.com/YuXiang-ZhuanSun/rust-ai-agent-learning"
             target="_blank"
             rel="noopener"
             className="text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-white"
@@ -156,7 +156,7 @@ export function Header() {
                   {dark ? <Sun size={18} /> : <Moon size={18} />}
                 </button>
                 <a
-                  href="https://github.com/wukangxin/ai-agent-learning"
+                  href="https://github.com/YuXiang-ZhuanSun/rust-ai-agent-learning"
                   target="_blank"
                   rel="noopener"
                   className="flex min-h-[44px] min-w-[44px] items-center justify-center text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-white"
