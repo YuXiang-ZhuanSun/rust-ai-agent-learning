@@ -1,0 +1,225 @@
+use crate::lessons::lesson02_tools::ToolRegistry;
+use crate::lessons::lesson06_context_compact::{estimate_tokens, micro_compact, summary_replacement};
+use crate::lessons::lesson09_agent_teams::TeammateManager;
+use crate::openai::{ChatMessage, OpenAiClient, ToolSpec};
+use crate::runtime::{
+    BackgroundManager, MessageBus, SkillLoader, TaskManager, TaskStatus, TodoManager,
+};
+use anyhow::Result;
+use serde_json::json;
+use std::path::PathBuf;
+
+pub struct FullAgent {
+    client: OpenAiClient,
+    tools: ToolRegistry,
+    todo: TodoManager,
+    skills: SkillLoader,
+    tasks: TaskManager,
+    background: BackgroundManager,
+    bus: MessageBus,
+    team: TeammateManager,
+}
+
+impl FullAgent {
+    pub fn new(workspace: PathBuf) -> Result<Self> {
+        Ok(Self {
+            client: OpenAiClient::from_env()?,
+            tools: ToolRegistry::new(workspace.clone()),
+            todo: TodoManager::default(),
+            skills: SkillLoader::from_dir(workspace.join("skills"))?,
+            tasks: TaskManager::new(workspace.join(".tasks"))?,
+            background: BackgroundManager::default(),
+            bus: MessageBus::new(workspace.join(".team").join("inbox"))?,
+            team: TeammateManager::default(),
+        })
+    }
+
+    pub fn system_prompt(&self) -> String {
+        format!(
+            "You are a coding agent. Use tools, todos, tasks, subagents, skills, background work, and team messages as needed.\nSkills:\n{}",
+            self.skills.descriptions()
+        )
+    }
+
+    pub fn tool_specs(&self) -> Vec<ToolSpec> {
+        let mut specs = self.tools.specs();
+        specs.extend([
+            ToolSpec::object("TodoWrite", "Replace the todo checklist.", json!({ "items": { "type": "array" } }), &["items"]),
+            ToolSpec::object("task", "Delegate a prompt to a focused subagent.", json!({ "prompt": { "type": "string" }, "agent_type": { "type": "string" } }), &["prompt"]),
+            ToolSpec::object("load_skill", "Load a skill by name.", json!({ "name": { "type": "string" } }), &["name"]),
+            ToolSpec::object("compress", "Manually compact context.", json!({ "summary": { "type": "string" } }), &[]),
+            ToolSpec::object("task_create", "Create a task.", json!({ "subject": { "type": "string" }, "description": { "type": "string" } }), &["subject", "description"]),
+            ToolSpec::object("task_update", "Update task status and dependencies.", json!({ "id": { "type": "integer" }, "status": { "type": "string" }, "blocked_by": { "type": "array" }, "blocks": { "type": "array" } }), &["id"]),
+            ToolSpec::object("task_get", "Read one task by id.", json!({ "id": { "type": "integer" } }), &["id"]),
+            ToolSpec::object("task_list", "List all tasks.", json!({}), &[]),
+            ToolSpec::object("background_run", "Run a command in the background.", json!({ "command": { "type": "string" }, "timeout_secs": { "type": "integer" } }), &["command"]),
+            ToolSpec::object("check_background", "Check a background task by id.", json!({ "id": { "type": "string" } }), &["id"]),
+            ToolSpec::object("spawn_teammate", "Register a teammate.", json!({ "name": { "type": "string" }, "role": { "type": "string" }, "prompt": { "type": "string" } }), &["name", "role"]),
+            ToolSpec::object("list_teammates", "List teammate names.", json!({}), &[]),
+            ToolSpec::object("send_message", "Send a team message.", json!({ "to": { "type": "string" }, "body": { "type": "string" } }), &["to", "body"]),
+            ToolSpec::object("read_inbox", "Read and drain the lead inbox.", json!({}), &[]),
+            ToolSpec::object("broadcast", "Broadcast a message to teammates.", json!({ "body": { "type": "string" } }), &["body"]),
+            ToolSpec::object("shutdown_request", "Request that a teammate shuts down.", json!({ "to": { "type": "string" }, "reason": { "type": "string" } }), &["to", "reason"]),
+            ToolSpec::object("plan_approval", "Send a plan approval decision.", json!({ "to": { "type": "string" }, "request_id": { "type": "string" }, "approved": { "type": "boolean" } }), &["to", "request_id", "approved"]),
+        ]);
+        specs
+    }
+
+    pub async fn run(&mut self, prompt: &str) -> Result<String> {
+        let mut messages = vec![ChatMessage::system(self.system_prompt()), ChatMessage::user(prompt)];
+        let mut rounds_without_todo = 0;
+
+        for _ in 0..30 {
+            micro_compact(&mut messages, 8, 500);
+            if estimate_tokens(&messages) > 100_000 {
+                messages = summary_replacement("Conversation compacted by token threshold.");
+            }
+
+            for note in self.background.drain() {
+                messages.push(ChatMessage::user(format!(
+                    "<background-result id=\"{}\" status=\"{}\">{}</background-result>",
+                    note.id,
+                    note.status,
+                    note.result.unwrap_or_default()
+                )));
+            }
+
+            let inbox = self.bus.read_inbox("lead")?;
+            if !inbox.is_empty() {
+                messages.push(ChatMessage::user(format!(
+                    "<inbox>{}</inbox>",
+                    serde_json::to_string(&inbox)?
+                )));
+            }
+
+            let reply = self.client.chat(&messages, &self.tool_specs()).await?;
+            if let Some(calls) = &reply.tool_calls {
+                messages.push(reply.clone());
+                let mut used_todo = false;
+                for call in calls {
+                    let args = serde_json::from_str(&call.function.arguments)?;
+                    let output = self.execute_tool(&call.function.name, args)?;
+                    if call.function.name == "TodoWrite" {
+                        used_todo = true;
+                    }
+                    messages.push(ChatMessage::tool(&call.id, output));
+                }
+                rounds_without_todo = if used_todo { 0 } else { rounds_without_todo + 1 };
+                if self.todo.has_open_items() && rounds_without_todo >= 3 {
+                    messages.push(ChatMessage::user("Reminder: update TodoWrite before continuing."));
+                }
+            } else {
+                return Ok(reply.text().to_string());
+            }
+        }
+
+        Ok("agent stopped after the safety round limit".to_string())
+    }
+
+    pub fn execute_tool(&mut self, name: &str, args: serde_json::Value) -> Result<String> {
+        match name {
+            "TodoWrite" => {
+                let items = serde_json::from_value(args["items"].clone())?;
+                self.todo.update(items)
+            }
+            "load_skill" => self.skills.load(args["name"].as_str().unwrap_or_default()),
+            "task" => Ok(format!(
+                "subagent accepted {} task: {}",
+                args["agent_type"].as_str().unwrap_or("general"),
+                args["prompt"].as_str().unwrap_or_default()
+            )),
+            "compress" => Ok("manual compression requested; the next loop may replace history with a summary".to_string()),
+            "task_create" => {
+                let task = self.tasks.create(
+                    args["subject"].as_str().unwrap_or("untitled"),
+                    args["description"].as_str().unwrap_or_default(),
+                )?;
+                Ok(serde_json::to_string_pretty(&task)?)
+            }
+            "task_update" => {
+                let task = self.tasks.update(
+                    args["id"].as_u64().unwrap_or_default(),
+                    args["status"].as_str().map(parse_status).transpose()?,
+                    json_u64_list(&args["blocked_by"]),
+                    json_u64_list(&args["blocks"]),
+                )?;
+                Ok(serde_json::to_string_pretty(&task)?)
+            }
+            "task_get" => {
+                let task = self.tasks.get(args["id"].as_u64().unwrap_or_default())?;
+                Ok(serde_json::to_string_pretty(&task)?)
+            }
+            "task_list" => Ok(serde_json::to_string_pretty(&self.tasks.list()?)?),
+            "background_run" => Ok(self.background.run(
+                args["command"].as_str().unwrap_or_default(),
+                args["timeout_secs"].as_u64().unwrap_or(30),
+            )),
+            "check_background" => Ok(serde_json::to_string_pretty(
+                &self.background.check(args["id"].as_str().unwrap_or_default()),
+            )?),
+            "spawn_teammate" => Ok(self.team.spawn(
+                args["name"].as_str().unwrap_or("teammate"),
+                args["role"].as_str().unwrap_or("worker"),
+                args["prompt"].as_str().unwrap_or_default(),
+            )),
+            "list_teammates" => Ok(serde_json::to_string_pretty(&self.team.names())?),
+            "send_message" => {
+                self.bus.send(
+                    "lead",
+                    args["to"].as_str().unwrap_or("lead"),
+                    "message",
+                    json!({ "body": args["body"].as_str().unwrap_or_default() }),
+                )?;
+                Ok("sent".to_string())
+            }
+            "read_inbox" => Ok(serde_json::to_string_pretty(&self.bus.read_inbox("lead")?)?),
+            "broadcast" => {
+                let sent = self.bus.broadcast(
+                    "lead",
+                    &self.team.names(),
+                    json!({ "body": args["body"].as_str().unwrap_or_default() }),
+                )?;
+                Ok(format!("broadcast to {sent} teammates"))
+            }
+            "shutdown_request" => {
+                self.bus.send(
+                    "lead",
+                    args["to"].as_str().unwrap_or("teammate"),
+                    "shutdown_request",
+                    json!({ "reason": args["reason"].as_str().unwrap_or_default() }),
+                )?;
+                Ok("shutdown requested".to_string())
+            }
+            "plan_approval" => {
+                self.bus.send_with_request(
+                    "lead",
+                    args["to"].as_str().unwrap_or("teammate"),
+                    "plan_approval",
+                    json!({ "approved": args["approved"].as_bool().unwrap_or(false) }),
+                    Some(args["request_id"].as_str().unwrap_or_default().to_string()),
+                )?;
+                Ok("plan decision sent".to_string())
+            }
+            other => self.tools.execute(other, args),
+        }
+    }
+}
+
+fn parse_status(status: &str) -> Result<TaskStatus> {
+    match status {
+        "pending" => Ok(TaskStatus::Pending),
+        "in_progress" => Ok(TaskStatus::InProgress),
+        "blocked" => Ok(TaskStatus::Blocked),
+        "completed" => Ok(TaskStatus::Completed),
+        other => anyhow::bail!("unknown task status: {other}"),
+    }
+}
+
+fn json_u64_list(value: &serde_json::Value) -> Vec<u64> {
+    value
+        .as_array()
+        .into_iter()
+        .flatten()
+        .filter_map(serde_json::Value::as_u64)
+        .collect()
+}

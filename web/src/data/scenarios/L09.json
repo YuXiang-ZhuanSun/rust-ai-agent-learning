@@ -1,62 +1,39 @@
 {
   "version": "L09",
-  "title": "Agent Teams — Multi-Agent Collaboration",
-  "description": "Multiple agents work as a team, communicating via a mailbox system. A lead agent spawns teammates, assigns them work, and coordinates results. Each teammate has its own context and tools.",
+  "title": "Agent Teams",
+  "description": "A Rust-oriented simulation for Agent Teams.",
   "steps": [
     {
       "type": "user_message",
-      "content": "Build a full-stack bookstore: the backend REST API and the frontend React components, working on both simultaneously.",
-      "annotation": "This task naturally splits into two parallel workstreams. Instead of one agent doing everything sequentially, a team can work concurrently."
+      "content": "Try the Rust Agent Teams lesson on a small agent task.",
+      "annotation": "The user prompt enters the typed Rust message list."
     },
     {
       "type": "assistant_text",
-      "content": "I'll coordinate this as team lead. I'll spawn a backend-agent teammate for the API while I handle the frontend.",
-      "annotation": "The lead agent (this agent) decides the team structure: it will handle frontend, a teammate handles backend."
+      "content": "I will use the lesson mechanism and keep the loop readable.",
+      "annotation": "The assistant either answers directly or prepares to request a tool."
     },
     {
       "type": "tool_call",
-      "content": "{\n  \"name\": \"backend-agent\",\n  \"role\": \"Build the Spring Boot REST API for books: entity, repository, service, controller. Use com.bookstore package. Notify lead when done.\",\n  \"tools\": [\"bash\", \"write_file\", \"read_file\", \"edit_file\", \"send_message\"]\n}",
-      "toolName": "spawn_teammate",
-      "annotation": "The lead spawns a teammate agent with a specific role description. The teammate gets its own context, tool set, and can send messages back via the mailbox."
-    },
-    {
-      "type": "system_event",
-      "content": "Teammate spawned: backend-agent [agent-id=tm-4b2c]\nMailbox established: lead ↔ backend-agent\nbackend-agent is now working autonomously on its assigned role.",
-      "annotation": "The teammate is running independently. Communication happens through the mailbox — asynchronous message passing, not shared memory."
-    },
-    {
-      "type": "tool_call",
-      "content": "{\n  \"to\": \"backend-agent\",\n  \"content\": \"Use these specs for the Book entity: id (Long), title (String), author (String), isbn (String), price (BigDecimal). REST endpoints should be at /api/books. Let me know the response DTOs so I can build the frontend.\"\n}",
-      "toolName": "send_message",
-      "annotation": "The lead sends a message to the teammate with specifications. This is how agents coordinate — explicit message passing, not shared state."
+      "tool": "send_message",
+      "content": "{\n  \"demo\": true\n}",
+      "annotation": "The model requests the send_message tool."
     },
     {
       "type": "tool_result",
-      "content": "Message sent to backend-agent. Delivery confirmed.",
-      "toolName": "send_message",
-      "annotation": "Messages are reliably delivered to the teammate's mailbox. The teammate will read it on its next check."
-    },
-    {
-      "type": "tool_call",
-      "content": "import React, { useState, useEffect } from 'react';\n\ninterface Book {\n  id: number;\n  title: string;\n  author: string;\n  isbn: string;\n  price: number;\n}\n\nexport function BookList() {\n  const [books, setBooks] = useState<Book[]>([]);\n\n  useEffect(() => {\n    fetch('/api/books')\n      .then(res => res.json())\n      .then(setBooks);\n  }, []);\n\n  return (\n    <div className=\"book-list\">\n      <h2>Bookstore</h2>\n      {books.map(book => (\n        <div key={book.id} className=\"book-card\">\n          <h3>{book.title}</h3>\n          <p>{book.author} — ${book.price}</p>\n        </div>\n      ))}\n    </div>\n  );\n}",
-      "toolName": "write_file",
-      "annotation": "While the teammate builds the backend, the lead agent works on the frontend React component. Both agents work in parallel."
-    },
-    {
-      "type": "tool_result",
-      "content": "File written: frontend/src/components/BookList.tsx",
-      "toolName": "write_file",
-      "annotation": "Frontend component created. The lead continues its own work independently."
-    },
-    {
-      "type": "system_event",
-      "content": "Mailbox: New message from backend-agent → lead\n\"Backend API ready. Created: Book.java, BookRepository.java, BookService.java, BookController.java. Response DTO: { id: Long, title: String, author: String, isbn: String, price: BigDecimal }. All endpoints at /api/books. Tests passing.\"",
-      "annotation": "The teammate sends a completion message through the mailbox. The lead receives it as a system event and can now verify or integrate the work."
+      "tool": "send_message",
+      "content": "send_message completed in the Rust runtime.",
+      "annotation": "Rust executes the tool and appends a tool result message."
     },
     {
       "type": "assistant_text",
-      "content": "Full-stack build complete! The team worked in parallel:\n\n**Backend (backend-agent):**\n- `Book.java` — JPA entity\n- `BookRepository.java` — Spring Data repository\n- `BookService.java` — business logic\n- `BookController.java` — REST at `/api/books`\n\n**Frontend (lead):**\n- `BookList.tsx` — React component fetching from `/api/books`\n\nBoth sides are aligned on the API contract. The teammate confirmed tests are passing.",
-      "annotation": "Agent teams enable parallelism across different domains. The mailbox pattern keeps agents loosely coupled while allowing coordination when needed."
+      "content": "The result is incorporated and the agent continues with the updated context.",
+      "annotation": "The loop returns control to the model with the new evidence."
+    },
+    {
+      "type": "assistant_text",
+      "content": "Lesson L09 demonstrates Agent Teams in Rust without hiding the core control flow.",
+      "annotation": "The turn finishes once there are no more tool calls."
     }
   ]
 }

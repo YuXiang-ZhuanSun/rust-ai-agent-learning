@@ -10,16 +10,16 @@ import { LESSON_META, LESSON_ORDER, LEARNING_PATH } from "../src/lib/constants";
 
 const WEB_DIR = path.resolve(__dirname, "..");
 const REPO_ROOT = path.resolve(WEB_DIR, "..");
-const LESSONS_DIR = path.join(REPO_ROOT, "openai", "src", "main", "java", "ai", "agent", "learning", "lesson");
+const LESSONS_DIR = path.join(REPO_ROOT, "openai", "src", "lessons");
 const DOCS_DIR = path.join(REPO_ROOT, "docs", "openai");
 const OUT_DIR = path.join(WEB_DIR, "src", "data", "generated");
 
-// Map Java filenames to lesson IDs
-// Lesson0RunSimple.java -> L00
-// Lesson13RunSimple.java -> L13
+// Map Rust lesson filenames to lesson IDs
+// lesson00_basic_chat.rs -> L00
+// lesson13_full_agent.rs -> L13
 function filenameToLessonId(filename: string): string | null {
-  const base = path.basename(filename, ".java");
-  const match = base.match(/^Lesson(\d+)RunSimple$/);
+  const base = path.basename(filename, ".rs");
+  const match = base.match(/^lesson(\d+)_/);
   if (!match) return null;
   const num = parseInt(match[1]);
   return `L${num.toString().padStart(2, "0")}`;
@@ -35,12 +35,12 @@ function docFilenameToLessonId(filename: string): string | null {
   return `L${num.toString().padStart(2, "0")}`;
 }
 
-// Extract inner classes from Java source
+// Extract public Rust types from source
 function extractClasses(
   lines: string[]
 ): { name: string; startLine: number; endLine: number }[] {
   const classes: { name: string; startLine: number; endLine: number }[] = [];
-  const classPattern = /(?:static\s+)?(?:public\s+|private\s+|protected\s+)?(?:static\s+)?class\s+(\w+)/;
+  const classPattern = /(?:pub\s+)?(?:struct|enum|trait)\s+(\w+)/;
 
   for (let i = 0; i < lines.length; i++) {
     const m = lines[i].match(classPattern);
@@ -66,12 +66,12 @@ function extractClasses(
   return classes;
 }
 
-// Extract methods from Java source
+// Extract functions from Rust source
 function extractMethods(
   lines: string[]
 ): { name: string; signature: string; startLine: number }[] {
   const methods: { name: string; signature: string; startLine: number }[] = [];
-  const methodPattern = /(?:public|private|protected)?\s*(?:static\s+)?(?:\w+(?:<[^>]+>)?)\s+(\w+)\s*\(([^)]*)\)/;
+  const methodPattern = /(?:pub\s+)?(?:async\s+)?fn\s+(\w+)\s*\(([^)]*)\)/;
 
   for (let i = 0; i < lines.length; i++) {
     const m = lines[i].match(methodPattern);
@@ -86,15 +86,14 @@ function extractMethods(
   return methods;
 }
 
-// Extract tool names from Java source
+// Extract tool names from Rust source
 // Looks for "name" fields in tool definitions
 function extractTools(source: string): string[] {
   const tools = new Set<string>();
-  // Match patterns like .name("tool_name") or "name": "tool_name"
+  // Match patterns like ToolSpec::object("tool_name") or "name": "tool_name"
   const patterns = [
-    /\.name\("(\w+)"\)/g,
+    /ToolSpec::object\(\s*"(\w+)"/g,
     /"name"\s*:\s*"(\w+)"/g,
-    /functionName\s*=\s*"(\w+)"/g,
   ];
   for (const pattern of patterns) {
     let m;
@@ -129,7 +128,7 @@ function main() {
   // 1. Read all lesson files
   const lessonFiles = fs
     .readdirSync(LESSONS_DIR)
-    .filter((f) => f.match(/^Lesson\d+RunSimple\.java$/));
+    .filter((f) => f.match(/^lesson\d+_.*\.rs$/));
 
   console.log(`  Found ${lessonFiles.length} lesson files`);
 

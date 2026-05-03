@@ -1,58 +1,39 @@
 {
   "version": "L05",
-  "title": "Skills — Dynamic Knowledge Loading",
-  "description": "The agent loads a skill to inject domain-specific knowledge into its context. Skills are reusable prompt fragments that give the agent expertise on demand, without bloating the base system prompt.",
+  "title": "Skills",
+  "description": "A Rust-oriented simulation for Skills.",
   "steps": [
     {
       "type": "user_message",
-      "content": "Configure a Spring Boot application with connection pooling for PostgreSQL and proper health checks.",
-      "annotation": "This requires specific Spring Boot knowledge (properties, dependencies, actuator). The agent can load a skill to get expert-level guidance."
+      "content": "Try the Rust Skills lesson on a small agent task.",
+      "annotation": "The user prompt enters the typed Rust message list."
     },
     {
       "type": "assistant_text",
-      "content": "Let me load the Spring Boot skill for the latest configuration patterns.",
-      "annotation": "The agent recognizes it needs specialized knowledge and decides to load a skill before acting."
+      "content": "I will use the lesson mechanism and keep the loop readable.",
+      "annotation": "The assistant either answers directly or prepares to request a tool."
     },
     {
       "type": "tool_call",
-      "content": "spring-boot",
-      "toolName": "load_skill",
-      "annotation": "The agent requests the 'spring-boot' skill. This is similar to a slash command — it loads a curated prompt fragment into the conversation context."
+      "tool": "load_skill",
+      "content": "{\n  \"demo\": true\n}",
+      "annotation": "The model requests the load_skill tool."
     },
     {
       "type": "tool_result",
-      "content": "Skill loaded: spring-boot (v3.2)\n\n## Spring Boot Configuration Best Practices\n- Use application.yml over application.properties for readability\n- Connection pooling: HikariCP is the default, configure via spring.datasource.hikari.*\n- Health checks: Add spring-boot-starter-actuator, expose /actuator/health\n- Profiles: Use spring.profiles.active for environment-specific config\n- Key properties: spring.datasource.url, spring.datasource.hikari.maximum-pool-size\n- Always set spring.datasource.hikari.connection-timeout and idle-timeout\n- For production: enable actuator health indicators for db, diskSpace",
-      "toolName": "load_skill",
-      "annotation": "The skill content is injected into the agent's context. It now has structured knowledge about Spring Boot configuration patterns that it can apply directly."
-    },
-    {
-      "type": "tool_call",
-      "content": "spring:\n  datasource:\n    url: jdbc:postgresql://localhost:5432/bookstore\n    username: ${DB_USERNAME}\n    password: ${DB_PASSWORD}\n    hikari:\n      maximum-pool-size: 20\n      minimum-idle: 5\n      connection-timeout: 30000\n      idle-timeout: 600000\n      max-lifetime: 1800000\n\n  jpa:\n    hibernate:\n      ddl-auto: validate\n    show-sql: false\n\nmanagement:\n  endpoints:\n    web:\n      exposure:\n        include: health,info,metrics\n  endpoint:\n    health:\n      show-details: when_authorized\n  health:\n    db:\n      enabled: true\n    diskSpace:\n      enabled: true",
-      "toolName": "write_file",
-      "annotation": "The agent applies the skill knowledge to create application.yml. Notice how it follows the skill's guidance: HikariCP config, actuator exposure, health indicators."
-    },
-    {
-      "type": "tool_result",
-      "content": "File written: src/main/resources/application.yml",
-      "toolName": "write_file",
-      "annotation": "Configuration file created using patterns from the loaded skill."
-    },
-    {
-      "type": "tool_call",
-      "content": "old_string: '    <dependency>\n      <groupId>org.springframework.boot</groupId>\n      <artifactId>spring-boot-starter-web</artifactId>\n    </dependency>'\nnew_string: '    <dependency>\n      <groupId>org.springframework.boot</groupId>\n      <artifactId>spring-boot-starter-web</artifactId>\n    </dependency>\n    <dependency>\n      <groupId>org.springframework.boot</groupId>\n      <artifactId>spring-boot-starter-actuator</artifactId>\n    </dependency>\n    <dependency>\n      <groupId>org.springframework.boot</groupId>\n      <artifactId>spring-boot-starter-data-jpa</artifactId>\n    </dependency>\n    <dependency>\n      <groupId>org.postgresql</groupId>\n      <artifactId>postgresql</artifactId>\n      <scope>runtime</scope>\n    </dependency>'",
-      "toolName": "edit_file",
-      "annotation": "Adding the required dependencies: actuator for health checks, data-jpa for database access, postgresql driver. The skill informed which dependencies are needed."
-    },
-    {
-      "type": "tool_result",
-      "content": "Edit applied: pom.xml (12 lines added)",
-      "toolName": "edit_file",
-      "annotation": "Dependencies added. The skill provided the knowledge; the agent applied it to the specific codebase."
+      "tool": "load_skill",
+      "content": "load_skill completed in the Rust runtime.",
+      "annotation": "Rust executes the tool and appends a tool result message."
     },
     {
       "type": "assistant_text",
-      "content": "Configuration complete:\n\n1. **application.yml** — PostgreSQL connection with HikariCP pooling (20 max connections, 5 min idle)\n2. **pom.xml** — Added actuator, data-jpa, and postgresql dependencies\n3. **Health checks** — Exposed at `/actuator/health` with DB and disk space indicators\n\nCredentials are externalized via `${DB_USERNAME}` and `${DB_PASSWORD}` environment variables.",
-      "annotation": "The skill gave the agent domain expertise it could apply immediately. Skills are loaded on demand and discarded when no longer needed, keeping the base prompt lean."
+      "content": "The result is incorporated and the agent continues with the updated context.",
+      "annotation": "The loop returns control to the model with the new evidence."
+    },
+    {
+      "type": "assistant_text",
+      "content": "Lesson L05 demonstrates Skills in Rust without hiding the core control flow.",
+      "annotation": "The turn finishes once there are no more tool calls."
     }
   ]
 }

@@ -1,70 +1,39 @@
 {
   "version": "L02",
-  "title": "Multiple Tools — File Operations",
-  "description": "The agent uses multiple tools (write_file, read_file, edit_file, bash) in a single conversation to create, verify, and modify a Java file. This shows how agents orchestrate different tools to complete complex tasks.",
+  "title": "Tools",
+  "description": "A Rust-oriented simulation for Tools.",
   "steps": [
     {
       "type": "user_message",
-      "content": "Create a Calculator.java with add and subtract methods, then add a multiply method.",
-      "annotation": "This task requires multiple tool types: writing a file, reading it for verification, and editing it to add functionality."
+      "content": "Try the Rust Tools lesson on a small agent task.",
+      "annotation": "The user prompt enters the typed Rust message list."
     },
     {
       "type": "assistant_text",
-      "content": "I'll create the Calculator class with add and subtract, verify it, then add the multiply method.",
-      "annotation": "The agent plans its approach before executing. Planning helps the LLM sequence tool calls correctly."
+      "content": "I will use the lesson mechanism and keep the loop readable.",
+      "annotation": "The assistant either answers directly or prepares to request a tool."
     },
     {
       "type": "tool_call",
-      "content": "public class Calculator {\n    public int add(int a, int b) {\n        return a + b;\n    }\n\n    public int subtract(int a, int b) {\n        return a - b;\n    }\n}",
-      "toolName": "write_file",
-      "annotation": "Tool 1: write_file creates the initial file. The agent chose write_file over bash because it's purpose-built for file creation — better semantics and error handling."
+      "tool": "read_file",
+      "content": "{\n  \"demo\": true\n}",
+      "annotation": "The model requests the read_file tool."
     },
     {
       "type": "tool_result",
-      "content": "File written: Calculator.java (6 lines)",
-      "toolName": "write_file",
-      "annotation": "write_file confirms the operation. The agent now needs to verify the content."
-    },
-    {
-      "type": "tool_call",
-      "content": "Calculator.java",
-      "toolName": "read_file",
-      "annotation": "Tool 2: read_file reads back the file. Using a dedicated read tool is more reliable than bash cat for structured file content."
-    },
-    {
-      "type": "tool_result",
-      "content": "1│ public class Calculator {\n2│     public int add(int a, int b) {\n3│         return a + b;\n4│     }\n5│ \n6│     public int subtract(int a, int b) {\n7│         return a - b;\n8│     }\n9│ }",
-      "toolName": "read_file",
-      "annotation": "read_file returns the content with line numbers. The agent can now identify exactly where to insert the new method."
-    },
-    {
-      "type": "tool_call",
-      "content": "old_string: '    public int subtract(int a, int b) {\n        return a - b;\n    }\n}'\nnew_string: '    public int subtract(int a, int b) {\n        return a - b;\n    }\n\n    public int multiply(int a, int b) {\n        return a * b;\n    }\n}'",
-      "toolName": "edit_file",
-      "annotation": "Tool 3: edit_file performs a surgical replacement. It specifies the old text and the new text. This is safer than rewriting the entire file — it only changes what's needed."
-    },
-    {
-      "type": "tool_result",
-      "content": "Edit applied: Calculator.java (3 lines added)",
-      "toolName": "edit_file",
-      "annotation": "The edit was applied successfully. The agent now compiles to verify correctness."
-    },
-    {
-      "type": "tool_call",
-      "content": "javac Calculator.java && echo 'Compilation successful'",
-      "toolName": "bash",
-      "annotation": "Tool 4: bash compiles the file. The agent uses the right tool for each job — bash for commands, edit_file for modifications, etc."
-    },
-    {
-      "type": "tool_result",
-      "content": "Compilation successful",
-      "toolName": "bash",
-      "annotation": "All tools worked together: write_file → read_file → edit_file → bash. This multi-tool orchestration is core to agent capability."
+      "tool": "read_file",
+      "content": "read_file completed in the Rust runtime.",
+      "annotation": "Rust executes the tool and appends a tool result message."
     },
     {
       "type": "assistant_text",
-      "content": "Done! `Calculator.java` now has three methods:\n- `add(int a, int b)` — addition\n- `subtract(int a, int b)` — subtraction  \n- `multiply(int a, int b)` — multiplication\n\nThe file compiles cleanly.",
-      "annotation": "Final summary. The agent used four different tools in sequence, each chosen for its specific strength. This is the essence of multi-tool agents."
+      "content": "The result is incorporated and the agent continues with the updated context.",
+      "annotation": "The loop returns control to the model with the new evidence."
+    },
+    {
+      "type": "assistant_text",
+      "content": "Lesson L02 demonstrates Tools in Rust without hiding the core control flow.",
+      "annotation": "The turn finishes once there are no more tool calls."
     }
   ]
 }

@@ -1,58 +1,39 @@
 {
   "version": "L01",
-  "title": "Tool Use — Single Tool (Bash)",
-  "description": "The agent uses a single tool (bash) to perform file system operations. This demonstrates the tool-call/tool-result cycle that extends the agent beyond pure text generation.",
+  "title": "Tool Use",
+  "description": "A Rust-oriented simulation for Tool Use.",
   "steps": [
     {
       "type": "user_message",
-      "content": "Create a Hello.java file that prints 'Hello, Agent!' and compile it.",
-      "annotation": "The user requests a task that requires interacting with the file system. The LLM must decide to use a tool rather than just generating text."
+      "content": "Try the Rust Tool Use lesson on a small agent task.",
+      "annotation": "The user prompt enters the typed Rust message list."
     },
     {
       "type": "assistant_text",
-      "content": "I'll create the Java file, compile it, and verify it works.",
-      "annotation": "The assistant acknowledges the plan before making tool calls. This is a brief planning step."
+      "content": "I will use the lesson mechanism and keep the loop readable.",
+      "annotation": "The assistant either answers directly or prepares to request a tool."
     },
     {
       "type": "tool_call",
-      "content": "cat > Hello.java << 'EOF'\npublic class Hello {\n    public static void main(String[] args) {\n        System.out.println(\"Hello, Agent!\");\n    }\n}\nEOF",
-      "toolName": "bash",
-      "annotation": "First tool call: the agent writes the Java source file using a heredoc in bash. The LLM chooses the tool and constructs the arguments — this is the 'Action' in the ReAct loop."
+      "tool": "get_weather",
+      "content": "{\n  \"demo\": true\n}",
+      "annotation": "The model requests the get_weather tool."
     },
     {
       "type": "tool_result",
-      "content": "(file created successfully)",
-      "toolName": "bash",
-      "annotation": "The tool returns its result. The agent observes the output to decide the next step — this is the 'Observation' in the ReAct loop."
-    },
-    {
-      "type": "tool_call",
-      "content": "cat Hello.java",
-      "toolName": "bash",
-      "annotation": "The agent verifies the file was written correctly by reading it back. Good agents validate their own actions."
-    },
-    {
-      "type": "tool_result",
-      "content": "public class Hello {\n    public static void main(String[] args) {\n        System.out.println(\"Hello, Agent!\");\n    }\n}",
-      "toolName": "bash",
-      "annotation": "File contents confirmed. The observation matches expectations, so the agent proceeds to compilation."
-    },
-    {
-      "type": "tool_call",
-      "content": "javac Hello.java && java Hello",
-      "toolName": "bash",
-      "annotation": "Compile and run in one command. The '&&' ensures we only run if compilation succeeds."
-    },
-    {
-      "type": "tool_result",
-      "content": "Hello, Agent!",
-      "toolName": "bash",
-      "annotation": "The program compiled and ran successfully. The tool-call/tool-result cycle is complete."
+      "tool": "get_weather",
+      "content": "get_weather completed in the Rust runtime.",
+      "annotation": "Rust executes the tool and appends a tool result message."
     },
     {
       "type": "assistant_text",
-      "content": "Done! I created `Hello.java`, compiled it with `javac`, and ran it. The output is:\n\n```\nHello, Agent!\n```\n\nThe file is ready in your current directory.",
-      "annotation": "The agent summarizes what it did. The chat loop has completed one full iteration: user request → plan → tool calls → final response."
+      "content": "The result is incorporated and the agent continues with the updated context.",
+      "annotation": "The loop returns control to the model with the new evidence."
+    },
+    {
+      "type": "assistant_text",
+      "content": "Lesson L01 demonstrates Tool Use in Rust without hiding the core control flow.",
+      "annotation": "The turn finishes once there are no more tool calls."
     }
   ]
 }

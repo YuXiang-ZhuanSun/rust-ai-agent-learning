@@ -1,82 +1,39 @@
 {
   "version": "L12",
-  "title": "Worktree Isolation — Safe Execution Environments",
-  "description": "The agent creates a git worktree for isolated code changes. Worktrees let the agent experiment, refactor, or test without affecting the main working directory. If something goes wrong, the worktree is simply discarded.",
+  "title": "Worktree Isolation",
+  "description": "A Rust-oriented simulation for Worktree Isolation.",
   "steps": [
     {
       "type": "user_message",
-      "content": "Refactor BookService to use the repository pattern, but do it safely — I don't want my main branch touched until we verify it works.",
-      "annotation": "The user wants a safe refactoring. A worktree provides an isolated copy of the repo where the agent can make changes without risk."
+      "content": "Try the Rust Worktree Isolation lesson on a small agent task.",
+      "annotation": "The user prompt enters the typed Rust message list."
     },
     {
       "type": "assistant_text",
-      "content": "I'll create a worktree on a separate branch so your main working directory stays clean. If the refactor works, we merge; if not, we discard.",
-      "annotation": "The agent explains the isolation strategy before creating the worktree."
+      "content": "I will use the lesson mechanism and keep the loop readable.",
+      "annotation": "The assistant either answers directly or prepares to request a tool."
     },
     {
       "type": "tool_call",
-      "content": "{\n  \"branch\": \"refactor/repository-pattern\",\n  \"baseBranch\": \"main\",\n  \"path\": \"/tmp/worktree-refactor-001\"\n}",
-      "toolName": "worktree_create",
-      "annotation": "Creating a git worktree at a separate path. This is a lightweight clone — it shares the git object database but has its own working directory and branch."
+      "tool": "worktree_create",
+      "content": "{\n  \"demo\": true\n}",
+      "annotation": "The model requests the worktree_create tool."
     },
     {
       "type": "tool_result",
-      "content": "Worktree created:\n  Path: /tmp/worktree-refactor-001\n  Branch: refactor/repository-pattern (from main @ 3f99a3d)\n  Isolation: Full (separate working directory)",
-      "toolName": "worktree_create",
-      "annotation": "The worktree is ready. All file operations within /tmp/worktree-refactor-001 are isolated from the main working directory."
-    },
-    {
-      "type": "tool_call",
-      "content": "package com.bookstore.repository;\n\nimport com.bookstore.model.Book;\nimport org.springframework.data.jpa.repository.JpaRepository;\nimport org.springframework.data.jpa.repository.Query;\nimport java.util.List;\n\npublic interface BookRepository extends JpaRepository<Book, Long> {\n    List<Book> findByAuthor(String author);\n\n    @Query(\"SELECT b FROM Book b WHERE b.price <= :maxPrice\")\n    List<Book> findAffordableBooks(double maxPrice);\n}",
-      "toolName": "write_file",
-      "annotation": "Working inside the worktree. This file is created at /tmp/worktree-refactor-001/src/... — the main directory is untouched."
-    },
-    {
-      "type": "tool_result",
-      "content": "File written: /tmp/worktree-refactor-001/src/main/java/com/bookstore/repository/BookRepository.java",
-      "toolName": "write_file",
-      "annotation": "File created in the isolated worktree. The main repo at D:/code/ai-agent-learning has no changes."
-    },
-    {
-      "type": "tool_call",
-      "content": "cd /tmp/worktree-refactor-001 && mvn test 2>&1",
-      "toolName": "bash",
-      "annotation": "Running tests inside the worktree to verify the refactoring works. Even if tests modify files or fail badly, the main directory is safe."
-    },
-    {
-      "type": "tool_result",
-      "content": "Tests run: 15, Failures: 0, Errors: 0, Skipped: 0\nBUILD SUCCESS",
-      "toolName": "bash",
-      "annotation": "All tests pass in the isolated worktree. The refactoring is verified safe."
-    },
-    {
-      "type": "tool_call",
-      "content": "cd /tmp/worktree-refactor-001 && git add -A && git commit -m \"refactor: extract BookRepository with custom queries\"",
-      "toolName": "bash",
-      "annotation": "Committing the changes on the worktree's branch. This commit is on refactor/repository-pattern, not on main."
-    },
-    {
-      "type": "tool_result",
-      "content": "[refactor/repository-pattern 8a1c3f2] refactor: extract BookRepository with custom queries\n 3 files changed, 45 insertions(+), 28 deletions(-)",
-      "toolName": "bash",
-      "annotation": "Changes committed on the isolated branch. Ready to merge or discard."
-    },
-    {
-      "type": "tool_call",
-      "content": "{ \"path\": \"/tmp/worktree-refactor-001\", \"action\": \"close\", \"mergeBranch\": \"main\" }",
-      "toolName": "worktree_close",
-      "annotation": "Closing the worktree and merging the branch into main. If we wanted to discard instead, we'd set action to 'discard'."
-    },
-    {
-      "type": "tool_result",
-      "content": "Worktree closed: /tmp/worktree-refactor-001\nBranch refactor/repository-pattern merged into main.\nWorktree directory cleaned up.",
-      "toolName": "worktree_close",
-      "annotation": "The worktree is removed and changes are merged. Worktree isolation gives agents a safe sandbox for risky operations."
+      "tool": "worktree_create",
+      "content": "worktree_create completed in the Rust runtime.",
+      "annotation": "Rust executes the tool and appends a tool result message."
     },
     {
       "type": "assistant_text",
-      "content": "Refactoring complete and safely merged:\n\n1. **Created worktree** on `refactor/repository-pattern` branch\n2. **Refactored** BookService to use `BookRepository` (Spring Data JPA)\n3. **Verified** all 15 tests pass in isolation\n4. **Merged** back to main and cleaned up the worktree\n\nYour main branch now has the repository pattern. The refactoring was fully isolated until verified.",
-      "annotation": "Worktrees are essential for agents that need to make risky changes. The isolation pattern — branch, work, test, merge-or-discard — prevents agents from corrupting the user's workspace."
+      "content": "The result is incorporated and the agent continues with the updated context.",
+      "annotation": "The loop returns control to the model with the new evidence."
+    },
+    {
+      "type": "assistant_text",
+      "content": "Lesson L12 demonstrates Worktree Isolation in Rust without hiding the core control flow.",
+      "annotation": "The turn finishes once there are no more tool calls."
     }
   ]
 }

@@ -1,65 +1,39 @@
 {
   "version": "L03",
-  "title": "TodoWrite — Structured Task Planning",
-  "description": "The agent uses a TodoManager to plan work before executing it. Todos create a structured checklist that keeps the agent on track across long tasks. A nag reminder fires if the agent forgets to update its todos.",
+  "title": "TodoWrite",
+  "description": "A Rust-oriented simulation for TodoWrite.",
   "steps": [
     {
       "type": "user_message",
-      "content": "Build a REST API for a bookstore with GET /books and POST /books endpoints using Spring Boot.",
-      "annotation": "A multi-step task. Without a todo list the agent might lose track of steps. The TodoManager enforces discipline."
+      "content": "Try the Rust TodoWrite lesson on a small agent task.",
+      "annotation": "The user prompt enters the typed Rust message list."
+    },
+    {
+      "type": "assistant_text",
+      "content": "I will use the lesson mechanism and keep the loop readable.",
+      "annotation": "The assistant either answers directly or prepares to request a tool."
     },
     {
       "type": "tool_call",
-      "content": "[\n  { \"id\": \"1\", \"task\": \"Create Spring Boot project structure with pom.xml\", \"status\": \"in_progress\" },\n  { \"id\": \"2\", \"task\": \"Create Book entity class\", \"status\": \"pending\" },\n  { \"id\": \"3\", \"task\": \"Create BookController with GET /books\", \"status\": \"pending\" },\n  { \"id\": \"4\", \"task\": \"Add POST /books endpoint\", \"status\": \"pending\" },\n  { \"id\": \"5\", \"task\": \"Compile and verify\", \"status\": \"pending\" }\n]",
-      "toolName": "todo_write",
-      "annotation": "The agent writes its plan as structured todos BEFORE doing any work. Each todo has an id, task description, and status. This is the 'plan' phase."
+      "tool": "TodoWrite",
+      "content": "{\n  \"demo\": true\n}",
+      "annotation": "The model requests the TodoWrite tool."
     },
     {
       "type": "tool_result",
-      "content": "Todos saved (5 items). Current: #1 — Create Spring Boot project structure with pom.xml",
-      "toolName": "todo_write",
-      "annotation": "TodoManager acknowledges the plan. Item #1 is marked in_progress, giving the agent a clear next action."
+      "tool": "TodoWrite",
+      "content": "TodoWrite completed in the Rust runtime.",
+      "annotation": "Rust executes the tool and appends a tool result message."
     },
     {
-      "type": "tool_call",
-      "content": "<project>\n  <groupId>com.bookstore</groupId>\n  <artifactId>bookstore-api</artifactId>\n  <parent>\n    <groupId>org.springframework.boot</groupId>\n    <artifactId>spring-boot-starter-parent</artifactId>\n    <version>3.2.0</version>\n  </parent>\n  <dependencies>\n    <dependency>\n      <groupId>org.springframework.boot</groupId>\n      <artifactId>spring-boot-starter-web</artifactId>\n    </dependency>\n  </dependencies>\n</project>",
-      "toolName": "write_file",
-      "annotation": "Executing todo #1: creating the Maven project file. The agent works through its checklist item by item."
+      "type": "assistant_text",
+      "content": "The result is incorporated and the agent continues with the updated context.",
+      "annotation": "The loop returns control to the model with the new evidence."
     },
     {
-      "type": "tool_result",
-      "content": "File written: pom.xml",
-      "toolName": "write_file",
-      "annotation": "pom.xml created. The agent should now update todo #1 to 'completed' and move to #2."
-    },
-    {
-      "type": "system_event",
-      "content": "TodoManager: You have mass todos. You should update them as you work through your tasks. Current todos:\n#1 Create Spring Boot project structure with pom.xml [in_progress]\n#2 Create Book entity class [pending]\n#3 Create BookController with GET /books [pending]\n#4 Add POST /books endpoint [pending]\n#5 Compile and verify [pending]",
-      "annotation": "NAG REMINDER: The system injects this reminder because the agent completed work but forgot to update its todos. This is appended to the system prompt to keep the agent honest."
-    },
-    {
-      "type": "tool_call",
-      "content": "[\n  { \"id\": \"1\", \"task\": \"Create Spring Boot project structure with pom.xml\", \"status\": \"completed\" },\n  { \"id\": \"2\", \"task\": \"Create Book entity class\", \"status\": \"in_progress\" },\n  { \"id\": \"3\", \"task\": \"Create BookController with GET /books\", \"status\": \"pending\" },\n  { \"id\": \"4\", \"task\": \"Add POST /books endpoint\", \"status\": \"pending\" },\n  { \"id\": \"5\", \"task\": \"Compile and verify\", \"status\": \"pending\" }\n]",
-      "toolName": "todo_write",
-      "annotation": "The agent responds to the nag by updating its todos. #1 is now completed, #2 is in_progress. The TodoManager ensures nothing falls through the cracks."
-    },
-    {
-      "type": "tool_result",
-      "content": "Todos updated. Completed: 1/5. Current: #2 — Create Book entity class",
-      "toolName": "todo_write",
-      "annotation": "Progress is tracked. The agent continues executing its plan methodically."
-    },
-    {
-      "type": "tool_call",
-      "content": "package com.bookstore.model;\n\npublic class Book {\n    private Long id;\n    private String title;\n    private String author;\n    private double price;\n\n    public Book() {}\n\n    public Book(Long id, String title, String author, double price) {\n        this.id = id;\n        this.title = title;\n        this.author = author;\n        this.price = price;\n    }\n\n    // getters and setters\n    public Long getId() { return id; }\n    public void setId(Long id) { this.id = id; }\n    public String getTitle() { return title; }\n    public void setTitle(String title) { this.title = title; }\n    public String getAuthor() { return author; }\n    public void setAuthor(String author) { this.author = author; }\n    public double getPrice() { return price; }\n    public void setPrice(double price) { this.price = price; }\n}",
-      "toolName": "write_file",
-      "annotation": "Executing todo #2: creating the Book entity. The structured plan keeps the agent focused on one task at a time."
-    },
-    {
-      "type": "tool_result",
-      "content": "File written: src/main/java/com/bookstore/model/Book.java",
-      "toolName": "write_file",
-      "annotation": "Book entity created. The TodoManager pattern — plan first, execute step by step, update progress — prevents the agent from going off-track on complex tasks."
+      "type": "assistant_text",
+      "content": "Lesson L03 demonstrates TodoWrite in Rust without hiding the core control flow.",
+      "annotation": "The turn finishes once there are no more tool calls."
     }
   ]
 }

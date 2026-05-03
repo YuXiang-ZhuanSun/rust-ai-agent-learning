@@ -4,21 +4,23 @@
     {
       "id": "file-based-persistence",
       "title": "Why File-Based Persistence",
-      "description": "Tasks are stored as JSON files on the filesystem rather than in a database. This makes them inspectable with any text editor, diffable with git, and accessible to any tool the agent can invoke. There is no need for a database driver, connection pool, or schema migration. The filesystem is the simplest persistence layer that every operating system already provides.",
-      "alternatives": "SQLite would provide ACID guarantees and querying capabilities. A key-value store like Redis would offer speed. However, both add dependencies and operational complexity. For an agent managing dozens to hundreds of tasks, flat files are fast enough and infinitely simpler to debug.",
+      "description": "Tasks are stored as JSON files so they are easy to inspect, diff, back up, and edit with ordinary developer tools. For an educational agent runtime, the filesystem is transparent and has almost no operational overhead.",
+      "alternatives": "SQLite or Redis can be useful for larger systems, but flat files keep the tutorial focused on agent mechanics rather than infrastructure.",
       "zh": {
-        "title": "为什么使用基于文件的持久化",
-        "description": "任务以 JSON 文件存储在文件系统上，而非数据库中。这使得它们可以用任何文本编辑器查看、用 git 比较差异、被 Agent 可调用的任何工具访问。不需要数据库驱动、连接池或模式迁移。文件系统是每个操作系统都已提供的最简单的持久化层。"
+        "title": "为什么使用文件持久化",
+        "description": "任务保存为 JSON 文件，方便用普通开发工具查看、比较、备份和编辑。对于入门教程里的 Agent 运行时，文件系统足够透明，也几乎没有运维成本。",
+        "alternatives": "SQLite 或 Redis 适合更大的系统，但平面文件能让教程专注于 Agent 机制本身。"
       }
     },
     {
       "id": "dependency-graphs-matter",
       "title": "Why Dependency Graphs Matter",
-      "description": "Tasks often have prerequisites: you cannot deploy before tests pass, and you cannot test before building. By modeling dependencies as a directed graph, the agent can determine which tasks are ready to execute, which are blocked, and what the critical path is. This transforms a flat todo list into an intelligent execution planner.",
-      "alternatives": "A simple ordered list (do task 1, then task 2, then task 3) works for linear workflows but cannot express parallelism or conditional dependencies. A full workflow engine (like Airflow) is overkill for an agent's internal planning. A lightweight dependency graph hits the right complexity level.",
+      "description": "Task dependencies let the agent tell ready work from blocked work. A lightweight graph is enough to express ordering, parallelism, and critical paths without introducing a full workflow engine.",
+      "alternatives": "A simple ordered list is fine for linear work, but it cannot model parallel branches or blocked tasks clearly.",
       "zh": {
         "title": "为什么依赖图很重要",
-        "description": "任务之间往往存在前置条件：部署前必须通过测试，测试前必须完成构建。通过将依赖关系建模为有向图，Agent 能判断哪些任务可以执行、哪些被阻塞、以及关键路径是什么。这将一个扁平的待办列表升级为智能的执行规划器。"
+        "description": "任务依赖让 Agent 能区分可执行任务和被阻塞任务。轻量依赖图足以表达顺序、并行和关键路径，不需要引入完整工作流引擎。",
+        "alternatives": "简单有序列表适合线性工作，但很难清楚表达并行分支和阻塞关系。"
       }
     }
   ]

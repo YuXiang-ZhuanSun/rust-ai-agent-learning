@@ -1,68 +1,39 @@
 {
   "version": "L06",
-  "title": "Compact — Context Window Compression",
-  "description": "During a long session the agent's context window fills up. The compact mechanism detects this threshold and compresses older conversation history to free space, preserving essential information while discarding verbose details.",
+  "title": "Context Compact",
+  "description": "A Rust-oriented simulation for Context Compact.",
   "steps": [
     {
       "type": "user_message",
-      "content": "I need to build a complete Spring Boot microservice with entities, repositories, services, controllers, and tests.",
-      "annotation": "This is a large task that will generate many tool calls and results, filling the context window over time."
+      "content": "Try the Rust Context Compact lesson on a small agent task.",
+      "annotation": "The user prompt enters the typed Rust message list."
     },
     {
       "type": "assistant_text",
-      "content": "I'll work through this step by step. Let me start with the entity layer.",
-      "annotation": "The agent begins working. Over many turns, tool calls and results accumulate in the context."
+      "content": "I will use the lesson mechanism and keep the loop readable.",
+      "annotation": "The assistant either answers directly or prepares to request a tool."
     },
     {
       "type": "tool_call",
-      "content": "... (creates Order.java entity with 15 fields, JPA annotations, getters/setters) ...",
-      "toolName": "write_file",
-      "annotation": "Step 1 of many. Each file creation adds hundreds of tokens to the context window."
+      "tool": "compress",
+      "content": "{\n  \"demo\": true\n}",
+      "annotation": "The model requests the compress tool."
     },
     {
       "type": "tool_result",
-      "content": "File written: src/main/java/com/app/entity/Order.java (87 lines)",
-      "toolName": "write_file",
-      "annotation": "The result is stored in conversation history. After many such operations, context usage grows."
-    },
-    {
-      "type": "system_event",
-      "content": "Context usage: 78% (62,400 / 80,000 tokens). Approaching threshold.",
-      "annotation": "MICRO-COMPACT WARNING: The system monitors context usage. At ~80% a warning is emitted. The agent should be aware that compaction may occur soon."
-    },
-    {
-      "type": "tool_call",
-      "content": "... (creates OrderRepository, OrderService, OrderController, plus test classes) ...",
-      "toolName": "write_file",
-      "annotation": "The agent continues working, generating more tool calls and results. Context pressure increases."
-    },
-    {
-      "type": "tool_result",
-      "content": "File written: src/test/java/com/app/service/OrderServiceTest.java (64 lines)",
-      "toolName": "write_file",
-      "annotation": "Another large tool result. The context window is now critically full."
-    },
-    {
-      "type": "system_event",
-      "content": "Context threshold reached (92%). Running auto-compact...\n\nCompressing conversation history:\n- Turns 1-14: Summarized → 'Created Order entity (Order.java), OrderRepository, OrderService with CRUD operations, OrderController with REST endpoints.'\n- Tool results: Verbose file contents replaced with file-path references\n- Preserved: Current todo list, active file paths, user's original request\n\nContext after compact: 34% (27,200 / 80,000 tokens). Freed 46,400 tokens.",
-      "annotation": "AUTO-COMPACT fires. The system summarizes older conversation turns into a concise summary, strips verbose tool results (keeping only file paths), and preserves critical state. This is invisible to the user but essential for long sessions."
+      "tool": "compress",
+      "content": "compress completed in the Rust runtime.",
+      "annotation": "Rust executes the tool and appends a tool result message."
     },
     {
       "type": "assistant_text",
-      "content": "I've completed the Order module (entity, repository, service, controller, and tests). Context was compacted to free up space. Let me continue with the remaining modules.\n\nCompleted so far:\n- `Order.java` — entity with JPA mappings\n- `OrderRepository.java` — Spring Data JPA interface\n- `OrderService.java` — business logic with CRUD\n- `OrderController.java` — REST endpoints\n- `OrderServiceTest.java` — unit tests\n\nMoving on to the Product module next.",
-      "annotation": "After compaction, the agent continues working with a fresh context budget. The summary preserves what was done, so it doesn't repeat work. Compact enables agents to handle tasks that exceed a single context window."
+      "content": "The result is incorporated and the agent continues with the updated context.",
+      "annotation": "The loop returns control to the model with the new evidence."
     },
     {
-      "type": "tool_call",
-      "content": "package com.app.entity;\n\nimport jakarta.persistence.*;\n\n@Entity\n@Table(name = \"products\")\npublic class Product {\n    @Id\n    @GeneratedValue(strategy = GenerationType.IDENTITY)\n    private Long id;\n    private String name;\n    private String description;\n    private double price;\n    private int stockQuantity;\n\n    // constructors, getters, setters...\n}",
-      "toolName": "write_file",
-      "annotation": "Work continues seamlessly after compaction. The agent has full context budget again to handle the next module."
-    },
-    {
-      "type": "tool_result",
-      "content": "File written: src/main/java/com/app/entity/Product.java",
-      "toolName": "write_file",
-      "annotation": "The compact mechanism makes long-running agent sessions viable. Without it, the agent would hit context limits and fail mid-task."
+      "type": "assistant_text",
+      "content": "Lesson L06 demonstrates Context Compact in Rust without hiding the core control flow.",
+      "annotation": "The turn finishes once there are no more tool calls."
     }
   ]
 }

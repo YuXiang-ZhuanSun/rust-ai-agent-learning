@@ -1,214 +1,71 @@
 # Lesson 3: TodoWrite
 
-`L00 > L01 > L02 > [ L03 ] L04 > L05 > L06 | L07 > L08 > L09 > L10 > L11 > L12 > L13`
+```text
+L00 > L01 > L02 > [ L03 ] > L04 > L05 > L06 > L07 > L08 > L09 > L10 > L11 > L12 > L13
+```
 
-> *"The agent can track its own progress -- and I can see it."* -- structured state the model writes to, the human reads from.
+> 计划要成为运行时状态，而不是一句“我会先做 A 再做 B”。
 
 ## Problem
 
-When an agent tackles a multi-step task, you cannot tell what it is doing. Is it stuck? Did it skip a step? Is it almost done? Without explicit progress tracking, the agent is a black box.
-
-The model needs a way to write structured state that:
-
-1. **You can observe** -- see what is done, what is in progress, what is pending.
-2. **The model maintains** -- it updates the list as it works.
-3. **Enforces discipline** -- only one task can be "in progress" at a time (forces sequential focus).
-4. **Nags when forgotten** -- if the model forgets to update, a reminder is injected.
+长任务里，模型很容易被某个子问题吸走注意力。TodoWrite 的目的不是给用户一个漂亮列表，而是让 Agent 拥有一个可见、可更新、可约束的计划状态。它能提醒模型：当前做到哪一步，哪些还没做，什么时候该收尾。
 
 ## Solution
 
-```
-+--------+      +-------+      +-------------+
-|  User  | ---> |  LLM  | ---> | tool_calls? |
-| prompt |      |       |      +------+------+
-+--------+      +---^---+             |
-                    |           yes    |    no
-                    |          +------+------+
-                    |          |             |
-                    |    +-----v-----------+ |
-                    |    | TOOL_HANDLERS   | |
-                    |    | + todo tool     | |
-                    |    +-----+-----------+ |
-                    |          |             |
-                    |    +-----v-----------+ |
-                    |    | TodoManager     | |
-                    |    | (validates &    | |
-                    |    |  renders state) | |
-                    |    +-----+-----------+ |
-                    |          |             |
-                    |    +-----v-----------+ |
-                    |    | nag reminder?   | |
-                    |    | (inject if 3+   | |
-                    |    |  rounds w/o     | |
-                    |    |  todo update)   | |
-                    |    +-----------------+ |
-                    |          |             |
-                    +----------+        +----v----+
-                   tool_result          |  done   |
-                                        +---------+
+```text
+User goal
+   |
+   v
+todo([{ pending }, { in_progress }])
+   |
+   v
+act with tools
+   |
+   v
+update todo -> continue
 ```
 
 ## How It Works
 
-1. The `TodoManager` is a server-side data structure that validates and renders todo state.
+1. 模型先用 `todo` 工具写出短计划。
+2. `TodoManager` 校验最多 20 项，且只能有一个 `in_progress`。
+3. 每次工具调用后检查是否长时间没更新 todo。
+4. 如果仍有未完成项目，系统可注入轻量 reminder。
+5. 完成任务时，todo 成为最终汇报的骨架。
 
-```java
-static class TodoManager {
-    private List<TodoItem> items = new ArrayList<>();
+## Mechanism
 
-    public String update(List<Map<String, Object>> newItems) {
-        if (newItems.size() > 20) {
-            throw new IllegalArgumentException("Max 20 todos allowed");
-        }
+| Component | Role |
+|-----------|------|
+| 约束 | 只允许一个 in_progress，防止“并行假象” |
+| 提醒 | 多轮未更新时注入 reminder |
+| 可见性 | 用户能看到 Agent 的计划状态 |
+| 可靠性 | 减少长任务漂移 |
 
-        List<TodoItem> validated = new ArrayList<>();
-        int inProgressCount = 0;
+## Source Slice
 
-        for (int i = 0; i < newItems.size(); i++) {
-            Map<String, Object> item = newItems.get(i);
-            String text = item.get("text").toString().trim();
-            String status = item.get("status").toString().toLowerCase();
-            String id = item.get("id") != null ? item.get("id").toString() : String.valueOf(i + 1);
-
-            if (!status.equals("pending") && !status.equals("in_progress")
-                    && !status.equals("completed")) {
-                throw new IllegalArgumentException("Item " + id + ": invalid status '" + status + "'");
-            }
-            if (status.equals("in_progress")) {
-                inProgressCount++;
-            }
-
-            validated.add(new TodoItem(id, text, status));
-        }
-
-        if (inProgressCount > 1) {
-            throw new IllegalArgumentException("Only one task can be in_progress at a time");
-        }
-
-        items = validated;
-        return render();
+```rust
+let mut used_todo = false;
+for call in calls {
+    if call.function.name == "todo" {
+        used_todo = true;
+        self.todo.update(parse_todos(args)?)?;
     }
+}
+if self.todo.has_open_items() && rounds_since_todo >= 3 {
+    messages.push(ChatMessage::user("<reminder>Update your todos.</reminder>"));
 }
 ```
 
-Key constraints enforced by the server, not the model:
-
-- **Max 20 items** -- prevents unbounded growth.
-- **Three valid statuses** -- `pending`, `in_progress`, `completed`.
-- **One `in_progress` at a time** -- forces the model to finish one thing before starting another. This is the most important constraint. Without it, models tend to start everything and finish nothing.
-
-2. The render method produces a human-readable checklist.
-
-```java
-public String render() {
-    StringBuilder sb = new StringBuilder();
-    for (TodoItem item : items) {
-        String marker = switch (item.status) {
-            case "pending"     -> "[ ]";
-            case "in_progress" -> "[>]";
-            case "completed"   -> "[x]";
-            default            -> "[?]";
-        };
-        sb.append(marker).append(" #").append(item.id)
-          .append(": ").append(item.text).append("\n");
-    }
-    long done = items.stream().filter(t -> t.status.equals("completed")).count();
-    sb.append("\n(").append(done).append("/").append(items.size()).append(" completed)");
-    return sb.toString();
-}
-```
-
-Output looks like:
-
-```
-[x] #1: Read the project structure
-[>] #2: Analyze pom.xml dependencies
-[ ] #3: Write summary report
-
-(1/3 completed)
-```
-
-This output goes back to the model as the tool result, so the model sees its own progress on every update.
-
-3. The `todo` tool is defined with a structured schema.
-
-```java
-tools.add(ChatCompletionTool.builder()
-        .function(FunctionDefinition.builder()
-                .name("todo")
-                .description("Update task list. Track progress on multi-step tasks.")
-                .parameters(FunctionParameters.builder()
-                        .putAdditionalProperty("type", JsonValue.from("object"))
-                        .putAdditionalProperty("properties", JsonValue.from(Map.of(
-                                "items", Map.of(
-                                        "type", "array",
-                                        "items", Map.of(
-                                                "type", "object",
-                                                "properties", Map.of(
-                                                        "id", Map.of("type", "string"),
-                                                        "text", Map.of("type", "string"),
-                                                        "status", Map.of("type", "string",
-                                                                "enum", List.of("pending", "in_progress", "completed"))
-                                                ),
-                                                "required", List.of("id", "text", "status")
-                                        )
-                                )
-                        )))
-                        .putAdditionalProperty("required", JsonValue.from(List.of("items")))
-                        .build())
-                .build())
-        .build());
-```
-
-The schema uses `enum` for status values -- the model sees the valid options and rarely sends an invalid one. The entire items array is replaced on each call (full-state replacement, not delta updates). This is simpler and less error-prone.
-
-4. Nag reminder injection: if the model goes 3+ rounds without calling the `todo` tool, a reminder is injected.
-
-```java
-int roundsSinceTodo = 0;
-
-// Inside the loop, after processing tool calls:
-roundsSinceTodo = usedTodo ? 0 : roundsSinceTodo + 1;
-if (roundsSinceTodo >= 3) {
-    // Inject reminder into the next tool result
-    results.add(0, Map.of(
-            "type", "text",
-            "text", "<reminder>Update your todos.</reminder>"
-    ));
-}
-```
-
-This is a **system-level nudge** that works because the model reads tool results. The `<reminder>` tag signals that this is metadata, not user content. Models reliably respond by calling the `todo` tool.
-
-5. The handler connects the tool to the TodoManager.
-
-```java
-handlers.put("todo", args -> {
-    Object itemsObj = args.get("items");
-    if (itemsObj instanceof List) {
-        @SuppressWarnings("unchecked")
-        List<Map<String, Object>> items = (List<Map<String, Object>>) itemsObj;
-        return todoManager.update(items);
-    }
-    return "Error: items must be a list";
-});
-```
-
-## What Changed
-
-| Component     | Lesson 2                | Lesson 3                          |
-|---------------|-------------------------|-----------------------------------|
-| Tools         | 4 (bash, read, write, edit) | 5 (+ `todo`)                  |
-| State         | (none)                  | `TodoManager` with validation     |
-| Observability | Log output only         | Structured checklist              |
-| Constraints   | Path sandboxing         | + one `in_progress` at a time     |
-| Nudging       | (none)                  | Nag reminder after 3 idle rounds  |
-| Loop          | Same                    | Same (+ nag injection point)      |
+Full source: `openai/src/lessons/lesson03_todo_write.rs`. Entry point: `openai/src/bin/lesson03.rs`.
 
 ## Try It
 
-```sh
-mvn spring-boot:run -pl openai -Dspring-boot.run.arguments="--lesson=lesson3 --prompt='Analyze this project structure. Create todos for each step.'"
+```bash
+cargo run -p ai-agent-learning-openai --bin lesson03 -- "让 Agent 分三步创建一个小项目"
 ```
 
-**Source**: [`Lesson3RunSimple.java`](../../openai/src/main/java/ai/agent/learning/lesson/Lesson3RunSimple.java)
+More prompts:
+
+- 故意给很多任务，观察校验
+- 比较有 todo 和无 todo 的执行稳定性

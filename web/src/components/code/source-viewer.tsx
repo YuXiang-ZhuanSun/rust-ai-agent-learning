@@ -7,7 +7,7 @@ interface SourceViewerProps {
   filename: string;
 }
 
-function highlightJavaLine(line: string): React.ReactNode[] {
+function highlightRustLine(line: string): React.ReactNode[] {
   const trimmed = line.trimStart();
 
   // Comments
@@ -18,24 +18,16 @@ function highlightJavaLine(line: string): React.ReactNode[] {
     return [<span key={0} className="text-zinc-400 italic">{line}</span>];
   }
 
-  // Annotations
-  if (trimmed.startsWith("@")) {
-    return [<span key={0} className="text-amber-400">{line}</span>];
-  }
-
   const keywordSet = new Set([
-    "public", "private", "protected", "static", "final", "abstract",
-    "class", "interface", "extends", "implements", "import", "package",
-    "return", "if", "else", "while", "for", "do", "switch", "case",
-    "break", "continue", "try", "catch", "finally", "throw", "throws",
-    "new", "this", "super", "void", "null", "true", "false",
-    "int", "long", "double", "float", "boolean", "char", "byte", "short",
-    "var", "default", "instanceof", "synchronized", "volatile",
-    "enum", "record", "sealed", "permits", "yield",
+    "pub", "use", "mod", "crate", "super", "self", "struct", "enum",
+    "trait", "impl", "fn", "async", "await", "return", "if", "else",
+    "match", "while", "for", "loop", "break", "continue", "let", "mut",
+    "const", "static", "ref", "move", "where", "dyn", "type", "as",
+    "in", "true", "false", "Some", "None", "Ok", "Err", "Result",
   ]);
 
   const parts = line.split(
-    /(\b(?:public|private|protected|static|final|abstract|class|interface|extends|implements|import|package|return|if|else|while|for|do|switch|case|break|continue|try|catch|finally|throw|throws|new|this|super|void|null|true|false|int|long|double|float|boolean|char|byte|short|var|default|instanceof|synchronized|volatile|enum|record|sealed|permits|yield)\b|"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|\/\/.*$|\b\d+(?:\.\d+)?[LlFfDd]?\b)/
+    /(\b(?:pub|use|mod|crate|super|self|struct|enum|trait|impl|fn|async|await|return|if|else|match|while|for|loop|break|continue|let|mut|const|static|ref|move|where|dyn|type|as|in|true|false|Some|None|Ok|Err|Result)\b|"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|\/\/.*$|\b\d+(?:\.\d+)?\b)/
   );
 
   return parts.map((part, idx) => {
@@ -43,7 +35,7 @@ function highlightJavaLine(line: string): React.ReactNode[] {
     if (keywordSet.has(part)) {
       return <span key={idx} className="text-blue-400 font-medium">{part}</span>;
     }
-    if (part === "this" || part === "super") {
+    if (part === "self" || part === "super" || part === "crate") {
       return <span key={idx} className="text-purple-400">{part}</span>;
     }
     if (part.startsWith("//")) {
@@ -55,7 +47,7 @@ function highlightJavaLine(line: string): React.ReactNode[] {
     ) {
       return <span key={idx} className="text-emerald-500">{part}</span>;
     }
-    if (/^\d+(?:\.\d+)?[LlFfDd]?$/.test(part)) {
+    if (/^\d+(?:\.\d+)?$/.test(part)) {
       return <span key={idx} className="text-orange-400">{part}</span>;
     }
     return <span key={idx}>{part}</span>;
@@ -84,7 +76,7 @@ export function SourceViewer({ source, filename }: SourceViewerProps) {
                   {i + 1}
                 </span>
                 <span className="text-zinc-200">
-                  {highlightJavaLine(line)}
+                  {highlightRustLine(line)}
                 </span>
               </div>
             ))}

@@ -5,6 +5,8 @@ target/
 .claude/
 web/node_modules/
 web/.next/
+web/out/
+web/*.log
 web/.pageview-count.json
 .team/
 .tasks/

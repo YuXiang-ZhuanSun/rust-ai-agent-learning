@@ -75,44 +75,47 @@ export default function HomePage() {
             <span className="h-3 w-3 rounded-full bg-red-500/70" />
             <span className="h-3 w-3 rounded-full bg-yellow-500/70" />
             <span className="h-3 w-3 rounded-full bg-green-500/70" />
-            <span className="ml-3 text-xs text-zinc-500">AgentLoop.java</span>
+            <span className="ml-3 text-xs text-zinc-500">agent_loop.rs</span>
           </div>
           <pre className="overflow-x-auto p-4 text-sm leading-relaxed">
             <code>
-              <span className="text-purple-400">while</span>
-              <span className="text-zinc-300"> (</span>
-              <span className="text-orange-300">true</span>
-              <span className="text-zinc-300">) {"{"}</span>
+              <span className="text-purple-400">loop</span>
+              <span className="text-zinc-300"> {"{"}</span>
               {"\n"}
-              <span className="text-zinc-300">{"    "}response = client.chat().completions().</span>
-              <span className="text-blue-400">create</span>
+              <span className="text-purple-400">{"    "}let</span>
+              <span className="text-zinc-300"> response = client.</span>
+              <span className="text-blue-400">chat</span>
               <span className="text-zinc-500">(</span>
-              <span className="text-zinc-300">params</span>
-              <span className="text-zinc-500">);</span>
+              <span className="text-zinc-300">&messages, &tools</span>
+              <span className="text-zinc-500">).await?;</span>
               {"\n"}
               <span className="text-purple-400">{"    "}if</span>
-              <span className="text-zinc-300"> (response.toolCalls().</span>
-              <span className="text-blue-400">isEmpty</span>
-              <span className="text-zinc-500">())</span>
+              <span className="text-zinc-300"> response.tool_calls.</span>
+              <span className="text-blue-400">is_none</span>
+              <span className="text-zinc-500">() {"{"}</span>
               {"\n"}
               <span className="text-purple-400">{"        "}break</span>
+              <span className="text-zinc-300"> response.text().to_string()</span>
               <span className="text-zinc-500">;</span>
               {"\n"}
-              <span className="text-purple-400">{"    "}for</span>
-              <span className="text-zinc-300"> (toolCall : response.toolCalls()) {"{"}</span>
+              <span className="text-zinc-300">{"    }"}</span>
               {"\n"}
-              <span className="text-zinc-300">{"        "}result = </span>
+              <span className="text-purple-400">{"    "}for</span>
+              <span className="text-zinc-300"> call in response.tool_calls.unwrap() {"{"}</span>
+              {"\n"}
+              <span className="text-purple-400">{"        "}let</span>
+              <span className="text-zinc-300"> result = </span>
               <span className="text-blue-400">dispatch</span>
               <span className="text-zinc-500">(</span>
-              <span className="text-zinc-300">toolCall.name()</span>
+              <span className="text-zinc-300">&call.function.name</span>
               <span className="text-zinc-500">,</span>
-              <span className="text-zinc-300"> toolCall.arguments()</span>
-              <span className="text-zinc-500">);</span>
+              <span className="text-zinc-300"> &call.function.arguments</span>
+              <span className="text-zinc-500">)?;</span>
               {"\n"}
               <span className="text-zinc-300">{"        "}messages.</span>
-              <span className="text-blue-400">add</span>
+              <span className="text-blue-400">push</span>
               <span className="text-zinc-500">(</span>
-              <span className="text-zinc-300">result</span>
+              <span className="text-zinc-300">ChatMessage::tool(call.id, result)</span>
               <span className="text-zinc-500">);</span>
               {"\n"}
               <span className="text-zinc-300">{"    }"}</span>

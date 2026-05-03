@@ -1,63 +1,39 @@
 {
   "version": "L10",
-  "title": "Team Protocols — Structured Agent Communication",
-  "description": "Agents follow formal protocols for coordination: shutdown sequences, approval workflows, and FSM-based state transitions. Protocols add reliability and auditability to multi-agent systems.",
+  "title": "Team Protocols",
+  "description": "A Rust-oriented simulation for Team Protocols.",
   "steps": [
     {
       "type": "user_message",
-      "content": "Deploy the bookstore application to staging. This requires approval from the team lead before proceeding.",
-      "annotation": "Deployment is a sensitive operation that uses a protocol: request → approval → execute. This prevents unilateral actions by any single agent."
-    },
-    {
-      "type": "tool_call",
-      "content": "{\n  \"protocol\": \"deployment-approval\",\n  \"request_id\": \"deploy-req-001\",\n  \"action\": \"deploy-to-staging\",\n  \"artifact\": \"bookstore-api:1.2.0\",\n  \"requestedBy\": \"deploy-agent\",\n  \"approver\": \"team-lead\"\n}",
-      "toolName": "protocol_request",
-      "annotation": "The agent initiates a deployment-approval protocol. The request has a unique request_id for tracking. It specifies who must approve the action."
-    },
-    {
-      "type": "tool_result",
-      "content": "Protocol initiated: deployment-approval [deploy-req-001]\nState: PENDING_APPROVAL\nAwaiting approval from: team-lead\nTimeout: 300s",
-      "toolName": "protocol_request",
-      "annotation": "The protocol enters PENDING_APPROVAL state. The FSM (finite state machine) tracks the lifecycle: PENDING → APPROVED/REJECTED → EXECUTING → COMPLETED."
-    },
-    {
-      "type": "system_event",
-      "content": "Protocol [deploy-req-001] state transition: PENDING_APPROVAL → APPROVED\nApprover: team-lead\nMessage: \"Staging deploy approved. Run full smoke tests after deployment.\"",
-      "annotation": "FSM STATE TRANSITION: The team-lead agent (or human) approves the request. The protocol advances from PENDING to APPROVED. The approval includes instructions."
-    },
-    {
-      "type": "tool_call",
-      "content": "{\n  \"request_id\": \"deploy-req-001\",\n  \"action\": \"execute\",\n  \"command\": \"mvn clean package -DskipTests && docker build -t bookstore-api:1.2.0 . && kubectl apply -f k8s/staging/\"\n}",
-      "toolName": "protocol_execute",
-      "annotation": "With approval granted, the agent executes the deployment. The request_id correlates this action back to the approved protocol, creating an audit trail."
-    },
-    {
-      "type": "tool_result",
-      "content": "Protocol [deploy-req-001] executing...\nBuild: SUCCESS\nDocker image: bookstore-api:1.2.0 pushed\nKubernetes: deployment/bookstore-api configured\nPods: 2/2 Running",
-      "toolName": "protocol_execute",
-      "annotation": "Deployment executed under the approved protocol. Every step is logged against the request_id."
-    },
-    {
-      "type": "tool_call",
-      "content": "mvn verify -Psmoke-tests -Dstaging.url=https://staging.bookstore.dev",
-      "toolName": "bash",
-      "annotation": "Running smoke tests as instructed by the approver. The agent follows the protocol's conditions."
-    },
-    {
-      "type": "tool_result",
-      "content": "Tests run: 8, Failures: 0, Errors: 0\nSmoke tests PASSED against staging.bookstore.dev",
-      "toolName": "bash",
-      "annotation": "Smoke tests pass. The agent can now close out the protocol."
-    },
-    {
-      "type": "system_event",
-      "content": "Protocol [deploy-req-001] state transition: EXECUTING → COMPLETED\nFSM final state reached. Audit log:\n  1. PENDING_APPROVAL (deploy-agent requested)\n  2. APPROVED (team-lead approved with conditions)\n  3. EXECUTING (deploy-agent ran deployment + smoke tests)\n  4. COMPLETED (all checks passed)\nProtocol closed.",
-      "annotation": "The protocol reaches its terminal state. The full audit trail shows who requested, who approved, what was executed, and the final result. This is critical for production-grade agent systems."
+      "content": "Try the Rust Team Protocols lesson on a small agent task.",
+      "annotation": "The user prompt enters the typed Rust message list."
     },
     {
       "type": "assistant_text",
-      "content": "Staging deployment complete with full protocol compliance:\n\n1. **Approval** — Requested and approved by team-lead\n2. **Deployment** — Built, containerized, deployed to Kubernetes (2 pods)\n3. **Verification** — 8/8 smoke tests passed\n\nProtocol `deploy-req-001` is closed with a complete audit trail.",
-      "annotation": "Protocols add governance to agent teams. Every sensitive action has a clear request/approval/execution chain, making multi-agent systems safe and auditable."
+      "content": "I will use the lesson mechanism and keep the loop readable.",
+      "annotation": "The assistant either answers directly or prepares to request a tool."
+    },
+    {
+      "type": "tool_call",
+      "tool": "shutdown_request",
+      "content": "{\n  \"demo\": true\n}",
+      "annotation": "The model requests the shutdown_request tool."
+    },
+    {
+      "type": "tool_result",
+      "tool": "shutdown_request",
+      "content": "shutdown_request completed in the Rust runtime.",
+      "annotation": "Rust executes the tool and appends a tool result message."
+    },
+    {
+      "type": "assistant_text",
+      "content": "The result is incorporated and the agent continues with the updated context.",
+      "annotation": "The loop returns control to the model with the new evidence."
+    },
+    {
+      "type": "assistant_text",
+      "content": "Lesson L10 demonstrates Team Protocols in Rust without hiding the core control flow.",
+      "annotation": "The turn finishes once there are no more tool calls."
     }
   ]
 }

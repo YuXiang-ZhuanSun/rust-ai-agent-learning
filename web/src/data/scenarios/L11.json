@@ -1,70 +1,39 @@
 {
   "version": "L11",
-  "title": "Autonomous Agents — Task Board Polling",
-  "description": "An autonomous agent runs in an idle loop, periodically scanning a task board for new work. When it finds an unclaimed task, it auto-claims it, executes the work, and reports completion. No human triggers needed.",
+  "title": "Autonomous Agents",
+  "description": "A Rust-oriented simulation for Autonomous Agents.",
   "steps": [
     {
-      "type": "system_event",
-      "content": "Autonomous agent started. Mode: idle-polling. Scan interval: 30s.\nConnected to task board: https://tasks.internal/api",
-      "annotation": "The agent starts in autonomous mode. Unlike interactive agents, it doesn't wait for user messages — it actively scans for work on a shared task board."
+      "type": "user_message",
+      "content": "Try the Rust Autonomous Agents lesson on a small agent task.",
+      "annotation": "The user prompt enters the typed Rust message list."
     },
     {
-      "type": "system_event",
-      "content": "Scanning task board... (cycle #47)\nFound 0 unclaimed tasks. Returning to idle.",
-      "annotation": "IDLE CYCLE: The agent polls the task board and finds nothing to do. It returns to idle and will scan again after the interval. This is the 'heartbeat' of an autonomous agent."
-    },
-    {
-      "type": "system_event",
-      "content": "Scanning task board... (cycle #48)\nFound 1 unclaimed task:\n  TASK-2847: \"Add input validation to BookController POST endpoint\"\n  Priority: HIGH | Labels: [bug-fix, backend]\n  Description: \"The POST /api/books endpoint accepts empty titles. Add @Valid annotation and constraints.\"",
-      "annotation": "A new task appears on the board. The agent evaluates whether it can handle this task based on its capabilities and the task's requirements."
+      "type": "assistant_text",
+      "content": "I will use the lesson mechanism and keep the loop readable.",
+      "annotation": "The assistant either answers directly or prepares to request a tool."
     },
     {
       "type": "tool_call",
-      "content": "{ \"taskId\": \"TASK-2847\", \"agent\": \"auto-agent-03\", \"action\": \"claim\" }",
-      "toolName": "task_board_update",
-      "annotation": "The agent auto-claims the task. This prevents other agents from picking it up simultaneously. The claim is atomic to avoid race conditions."
+      "tool": "task_claim",
+      "content": "{\n  \"demo\": true\n}",
+      "annotation": "The model requests the task_claim tool."
     },
     {
       "type": "tool_result",
-      "content": "TASK-2847 claimed by auto-agent-03. Status: IN_PROGRESS.\nLock acquired. Timeout: 600s.",
-      "toolName": "task_board_update",
-      "annotation": "Task claimed with a timeout lock. If the agent crashes or takes too long, the lock expires and the task returns to the board."
+      "tool": "task_claim",
+      "content": "task_claim completed in the Rust runtime.",
+      "annotation": "Rust executes the tool and appends a tool result message."
     },
     {
-      "type": "tool_call",
-      "content": "src/main/java/com/bookstore/controller/BookController.java",
-      "toolName": "read_file",
-      "annotation": "The agent reads the relevant file to understand the current state before making changes."
+      "type": "assistant_text",
+      "content": "The result is incorporated and the agent continues with the updated context.",
+      "annotation": "The loop returns control to the model with the new evidence."
     },
     {
-      "type": "tool_result",
-      "content": "1│ @RestController\n2│ @RequestMapping(\"/api/books\")\n3│ public class BookController {\n4│     @PostMapping\n5│     public Book createBook(@RequestBody Book book) {\n6│         return bookService.save(book);\n7│     }\n8│ }",
-      "toolName": "read_file",
-      "annotation": "The endpoint lacks @Valid annotation and the Book entity likely lacks constraint annotations."
-    },
-    {
-      "type": "tool_call",
-      "content": "old_string: '    public Book createBook(@RequestBody Book book) {'\nnew_string: '    public Book createBook(@Valid @RequestBody Book book) {'",
-      "toolName": "edit_file",
-      "annotation": "Adding @Valid to trigger JSR-303 bean validation on the request body."
-    },
-    {
-      "type": "tool_result",
-      "content": "Edit applied: BookController.java",
-      "toolName": "edit_file",
-      "annotation": "Controller updated. The agent also needs to add validation annotations to the Book entity."
-    },
-    {
-      "type": "tool_call",
-      "content": "{ \"taskId\": \"TASK-2847\", \"action\": \"complete\", \"summary\": \"Added @Valid to POST /api/books. Added @NotBlank to Book.title and @Positive to Book.price. Tests added and passing.\" }",
-      "toolName": "task_board_update",
-      "annotation": "The agent marks the task as complete on the board with a summary. The task is released and other agents or humans can review it."
-    },
-    {
-      "type": "tool_result",
-      "content": "TASK-2847 completed by auto-agent-03.\nStatus: DONE. Lock released.\nReturning to idle-polling mode.",
-      "toolName": "task_board_update",
-      "annotation": "Task complete. The autonomous agent returns to its idle loop, scanning for the next task. It will continue this cycle indefinitely until stopped."
+      "type": "assistant_text",
+      "content": "Lesson L11 demonstrates Autonomous Agents in Rust without hiding the core control flow.",
+      "annotation": "The turn finishes once there are no more tool calls."
     }
   ]
 }

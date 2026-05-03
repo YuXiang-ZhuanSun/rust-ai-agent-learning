@@ -1,62 +1,39 @@
 {
   "version": "L08",
-  "title": "Background Tasks — Parallel Execution",
-  "description": "The agent runs a long-running process (like tests or builds) in the background while continuing other work. A notification arrives when the background task completes, allowing the agent to react to results without blocking.",
+  "title": "Background Tasks",
+  "description": "A Rust-oriented simulation for Background Tasks.",
   "steps": [
     {
       "type": "user_message",
-      "content": "Run the full test suite and while it's running, add a new endpoint GET /books/{id} to BookController.",
-      "annotation": "The user wants two things done in parallel: run tests (slow) and add code (fast). Background tasks enable this."
+      "content": "Try the Rust Background Tasks lesson on a small agent task.",
+      "annotation": "The user prompt enters the typed Rust message list."
     },
     {
       "type": "assistant_text",
-      "content": "I'll start the test suite in the background and work on the new endpoint while it runs.",
-      "annotation": "The agent plans to use a background task for the slow operation (tests) so it can continue working."
+      "content": "I will use the lesson mechanism and keep the loop readable.",
+      "annotation": "The assistant either answers directly or prepares to request a tool."
     },
     {
       "type": "tool_call",
-      "content": "mvn test -pl bookstore-api 2>&1",
-      "toolName": "bash_background",
-      "annotation": "The agent launches 'mvn test' as a background task. Unlike a normal bash call, this returns immediately — the agent doesn't wait for the tests to finish."
-    },
-    {
-      "type": "system_event",
-      "content": "Background task started [id=bg-9x2k]: 'mvn test -pl bookstore-api'\nStatus: RUNNING. You will be notified when it completes.",
-      "annotation": "The system confirms the background task is running. The agent receives a task ID it can reference later. Execution continues immediately."
-    },
-    {
-      "type": "tool_call",
-      "content": "src/main/java/com/bookstore/controller/BookController.java",
-      "toolName": "read_file",
-      "annotation": "While tests run in the background, the agent reads the controller to add the new endpoint. No waiting required."
+      "tool": "background_run",
+      "content": "{\n  \"demo\": true\n}",
+      "annotation": "The model requests the background_run tool."
     },
     {
       "type": "tool_result",
-      "content": "1│ @RestController\n2│ @RequestMapping(\"/books\")\n3│ public class BookController {\n4│     @Autowired\n5│     private BookService bookService;\n6│ \n7│     @GetMapping\n8│     public List<Book> getAllBooks() {\n9│         return bookService.findAll();\n10│     }\n11│ \n12│     @PostMapping\n13│     public Book createBook(@RequestBody Book book) {\n14│         return bookService.save(book);\n15│     }\n16│ }",
-      "toolName": "read_file",
-      "annotation": "Controller read. The agent will add the GET /books/{id} endpoint."
-    },
-    {
-      "type": "tool_call",
-      "content": "old_string: '    @PostMapping\n    public Book createBook(@RequestBody Book book) {\n        return bookService.save(book);\n    }\n}'\nnew_string: '    @GetMapping(\"/{id}\")\n    public ResponseEntity<Book> getBookById(@PathVariable Long id) {\n        return bookService.findById(id)\n            .map(ResponseEntity::ok)\n            .orElse(ResponseEntity.notFound().build());\n    }\n\n    @PostMapping\n    public Book createBook(@RequestBody Book book) {\n        return bookService.save(book);\n    }\n}'",
-      "toolName": "edit_file",
-      "annotation": "Adding the GET /books/{id} endpoint. This work happens concurrently with the background test run — no time wasted waiting."
-    },
-    {
-      "type": "tool_result",
-      "content": "Edit applied: BookController.java (6 lines added)",
-      "toolName": "edit_file",
-      "annotation": "Endpoint added. The agent completed its foreground work while tests run in the background."
-    },
-    {
-      "type": "system_event",
-      "content": "Background task completed [id=bg-9x2k]: 'mvn test -pl bookstore-api'\nStatus: SUCCESS (exit code 0)\nDuration: 34s\nOutput (last 5 lines):\n  Tests run: 12, Failures: 0, Errors: 0, Skipped: 0\n  BUILD SUCCESS\n  Total time: 34.217 s",
-      "annotation": "The background task completion notification arrives. All 12 tests passed. The agent can now incorporate this result into its response."
+      "tool": "background_run",
+      "content": "background_run completed in the Rust runtime.",
+      "annotation": "Rust executes the tool and appends a tool result message."
     },
     {
       "type": "assistant_text",
-      "content": "Done! Two things completed in parallel:\n\n1. **New endpoint added** — `GET /books/{id}` returns a book by ID with proper 404 handling\n2. **Test suite passed** — All 12 tests passed (34s)\n\nThe new endpoint returns `ResponseEntity<Book>` so it sends a 404 status when the book isn't found, rather than returning null.",
-      "annotation": "Background tasks let the agent overlap slow operations (builds, tests, deployments) with fast operations (editing, reading). This reduces total wall-clock time for complex workflows."
+      "content": "The result is incorporated and the agent continues with the updated context.",
+      "annotation": "The loop returns control to the model with the new evidence."
+    },
+    {
+      "type": "assistant_text",
+      "content": "Lesson L08 demonstrates Background Tasks in Rust without hiding the core control flow.",
+      "annotation": "The turn finishes once there are no more tool calls."
     }
   ]
 }

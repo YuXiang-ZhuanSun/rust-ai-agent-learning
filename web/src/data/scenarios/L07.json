@@ -1,72 +1,39 @@
 {
   "version": "L07",
-  "title": "Tasks — Multi-Step Task Management",
-  "description": "The agent uses a TaskManager to track complex, multi-step work with dependencies. Unlike simple todos, tasks have types, statuses, and dependency chains that prevent out-of-order execution.",
+  "title": "Task System",
+  "description": "A Rust-oriented simulation for Task System.",
   "steps": [
     {
       "type": "user_message",
-      "content": "Implement JWT authentication for our Spring Boot API: create the JWT utility, the security filter, and the security config.",
-      "annotation": "A feature with dependencies: the JWT utility must exist before the filter, and the filter before the config. Tasks model this."
+      "content": "Try the Rust Task System lesson on a small agent task.",
+      "annotation": "The user prompt enters the typed Rust message list."
+    },
+    {
+      "type": "assistant_text",
+      "content": "I will use the lesson mechanism and keep the loop readable.",
+      "annotation": "The assistant either answers directly or prepares to request a tool."
     },
     {
       "type": "tool_call",
-      "content": "{\n  \"title\": \"Implement JWT Authentication\",\n  \"tasks\": [\n    { \"id\": \"jwt-util\", \"title\": \"Create JwtUtil class\", \"type\": \"code\", \"status\": \"pending\", \"dependencies\": [] },\n    { \"id\": \"jwt-filter\", \"title\": \"Create JwtAuthenticationFilter\", \"type\": \"code\", \"status\": \"pending\", \"dependencies\": [\"jwt-util\"] },\n    { \"id\": \"security-config\", \"title\": \"Create SecurityConfig\", \"type\": \"code\", \"status\": \"pending\", \"dependencies\": [\"jwt-filter\"] },\n    { \"id\": \"test-auth\", \"title\": \"Write authentication tests\", \"type\": \"test\", \"status\": \"pending\", \"dependencies\": [\"security-config\"] }\n  ]\n}",
-      "toolName": "task_create",
-      "annotation": "Tasks are created with explicit dependency chains. jwt-filter depends on jwt-util, security-config depends on jwt-filter. The TaskManager enforces this order."
+      "tool": "task_create",
+      "content": "{\n  \"demo\": true\n}",
+      "annotation": "The model requests the task_create tool."
     },
     {
       "type": "tool_result",
-      "content": "Task group created: 'Implement JWT Authentication' (4 tasks)\nReady to start: jwt-util (no dependencies)\nBlocked: jwt-filter, security-config, test-auth",
-      "toolName": "task_create",
-      "annotation": "The TaskManager identifies which tasks are ready (no unmet dependencies) and which are blocked. Only jwt-util can start."
+      "tool": "task_create",
+      "content": "task_create completed in the Rust runtime.",
+      "annotation": "Rust executes the tool and appends a tool result message."
     },
     {
-      "type": "tool_call",
-      "content": "{ \"id\": \"jwt-util\", \"status\": \"in_progress\" }",
-      "toolName": "task_update",
-      "annotation": "The agent claims the first task. Status transitions: pending → in_progress → completed (or failed)."
+      "type": "assistant_text",
+      "content": "The result is incorporated and the agent continues with the updated context.",
+      "annotation": "The loop returns control to the model with the new evidence."
     },
     {
-      "type": "tool_result",
-      "content": "Task updated: jwt-util → in_progress",
-      "toolName": "task_update",
-      "annotation": "Task is now active. The agent proceeds to implement it."
-    },
-    {
-      "type": "tool_call",
-      "content": "package com.app.security;\n\nimport io.jsonwebtoken.*;\nimport io.jsonwebtoken.security.Keys;\nimport java.security.Key;\nimport java.util.Date;\n\npublic class JwtUtil {\n    private static final Key SECRET = Keys.secretKeyFor(SignatureAlgorithm.HS256);\n    private static final long EXPIRATION_MS = 86400000; // 24h\n\n    public static String generateToken(String username) {\n        return Jwts.builder()\n            .setSubject(username)\n            .setIssuedAt(new Date())\n            .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_MS))\n            .signWith(SECRET)\n            .compact();\n    }\n\n    public static String extractUsername(String token) {\n        return Jwts.parserBuilder().setSigningKey(SECRET).build()\n            .parseClaimsJws(token).getBody().getSubject();\n    }\n\n    public static boolean isTokenValid(String token) {\n        try {\n            Jwts.parserBuilder().setSigningKey(SECRET).build().parseClaimsJws(token);\n            return true;\n        } catch (JwtException e) {\n            return false;\n        }\n    }\n}",
-      "toolName": "write_file",
-      "annotation": "Implementing the jwt-util task. The JwtUtil class handles token generation, extraction, and validation."
-    },
-    {
-      "type": "tool_result",
-      "content": "File written: src/main/java/com/app/security/JwtUtil.java",
-      "toolName": "write_file",
-      "annotation": "Implementation complete. Now the agent marks this task done."
-    },
-    {
-      "type": "tool_call",
-      "content": "{ \"id\": \"jwt-util\", \"status\": \"completed\" }",
-      "toolName": "task_update",
-      "annotation": "Marking jwt-util as completed. This should unblock jwt-filter."
-    },
-    {
-      "type": "tool_result",
-      "content": "Task updated: jwt-util → completed\nUnblocked: jwt-filter (all dependencies met)",
-      "toolName": "task_update",
-      "annotation": "The TaskManager automatically checks dependency chains. jwt-filter is now ready to start because its only dependency (jwt-util) is completed."
-    },
-    {
-      "type": "tool_call",
-      "content": "{}",
-      "toolName": "task_list",
-      "annotation": "The agent checks overall progress to plan its next move."
-    },
-    {
-      "type": "tool_result",
-      "content": "Implement JWT Authentication — 1/4 completed\n  ✅ jwt-util: Create JwtUtil class [completed]\n  ⬜ jwt-filter: Create JwtAuthenticationFilter [pending → ready]\n  🔒 security-config: Create SecurityConfig [blocked by: jwt-filter]\n  🔒 test-auth: Write authentication tests [blocked by: security-config]",
-      "toolName": "task_list",
-      "annotation": "A clear view of progress. Tasks with dependencies provide structure that prevents the agent from jumping ahead or missing steps. The agent will now work on jwt-filter next."
+      "type": "assistant_text",
+      "content": "Lesson L07 demonstrates Task System in Rust without hiding the core control flow.",
+      "annotation": "The turn finishes once there are no more tool calls."
     }
   ]
 }

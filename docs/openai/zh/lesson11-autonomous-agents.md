@@ -1,308 +1,63 @@
-# Lesson 11: Autonomous Agents (自治智能体)
+# Lesson 11: 自治 Agent
 
-`L00 > L01 > L02 > L03 > L04 > L05 > L06 | L07 > L08 > L09 > L10 > [ L11 ] L12 > L13`
+```text
+L00 > L01 > L02 > L03 > L04 > L05 > L06 > L07 > L08 > L09 > L10 > [ L11 ] > L12 > L13
+```
 
-> *"智能体自己找活干。"* -- 从被动接收任务到主动轮询任务看板。
+> 自治不是玄学，是空闲时该做什么的策略。
 
 ## 问题
 
-L10 的队友只能被动接收任务 -- Lead 必须通过 `send_message` 明确分配工作。如果 Lead 忙或者不在线，队友就闲着。我们需要队友具备自治能力：
-
-1. 工作完成后进入空闲状态，定期轮询任务看板
-2. 自动认领未分配的任务
-3. 上下文压缩后能重新注入身份信息
+如果队友只能等待 lead 指令，它们只是远程函数。自治 Agent 在完成当前工作后进入 idle phase：先读 inbox，再扫描任务板，找到无人认领且未阻塞的任务就 claim，然后重新进入工作阶段。
 
 ## 解决方案
 
-```
-+----------------------------------------------+
-|              Autonomous Loop                 |
-|                                              |
-|   +------------------+    +---------------+  |
-|   |   WORK 阶段       |    |  IDLE 阶段   |  |
-|   |                   |    |              |  |
-|   |  正常 agent loop  |    |  每5秒轮询:  |  |
-|   |  处理工具调用     | -> |  1.检查收件箱|  |
-|   |  直到:            |    |  2.扫描任务板|  |
-|   |  - LLM 无工具调用 |    |  3.自动认领  |  |
-|   |  - 调用 idle 工具 |    |              |  |
-|   |                  |    |  直到:        |  |
-|   +------------------+    |  - 有新消息   |  |
-|           ^               |  - 有可认领任务| |
-|           |               |  - 超时(60s)  |  |
-|           +---------------+               |  |
-|              (有新工作)                   |  |
-+----------------------------------------------+
-
-任务看板 (.tasks/):
-  task_1.json  { status: "completed", owner: "alice" }
-  task_2.json  { status: "pending",   owner: null    }  <-- 可认领!
-  task_3.json  { status: "pending",   owner: null, blockedBy: [2] }  <-- 被阻塞
+```text
+WORK phase: use tools until no tool call
+        |
+        v
+IDLE phase: read inbox -> scan tasks -> claim ready task
+        | message/task found
+        v
+resume WORK with identity block
 ```
 
 ## 工作原理
 
-### 1. 自治循环 -- Work 与 Idle 两个阶段
+1. 工作阶段正常执行工具循环。
+2. 模型停止调用工具后，不直接退出，而是进入 idle phase。
+3. 先读取 inbox，看是否有人发来新任务。
+4. 再扫描 `.tasks`，找 pending、无 owner、无 blocked_by 的任务。
+5. 认领任务后注入 identity block 和任务 prompt，继续工作。
 
-队友的主循环不再是简单的 for 循环，而是一个无限循环，在 Work 和 Idle 之间切换：
+## 本章机制
 
-```java
-private void autonomousLoop(String name, String role, String prompt) {
-    String teamName = config.get("team_name").toString();
-    String sysPrompt = "You are '" + name + "', role: " + role
-            + ", team: " + teamName + ", at " + workDir + ". "
-            + "Use idle tool when you have no more work. "
-            + "You will auto-claim new tasks.";
+| 组件 | 作用 |
+|------|------|
+| idle policy | 空闲时的确定性策略 |
+| claim | 防止多个 Agent 抢同一任务 |
+| identity | 压缩后重新注入名字和角色 |
+| 自治边界 | 只认领 ready task，不绕过依赖 |
 
-    List<ChatCompletionMessageParam> messages = new ArrayList<>();
-    messages.add(ChatCompletionMessageParam.ofUser(
-            ChatCompletionUserMessageParam.builder()
-                    .content(prompt).build()));
+## 源码切片
 
-    while (true) {
-        // -- WORK 阶段 --
-        for (int i = 0; i < 50; i++) {
-            // 检查收件箱 (包括关机请求)
-            List<Map<String, Object>> inbox = bus.readInbox(name);
-            for (Map<String, Object> msg : inbox) {
-                if ("shutdown_request".equals(msg.get("type"))) {
-                    setStatus(name, "shutdown");
-                    return;  // 立即退出
-                }
-                messages.add(/* msg as user message */);
-            }
-
-            // 正常 LLM 调用 + 工具处理
-            // 如果 LLM 调用了 "idle" 工具, break 进入 IDLE 阶段
-        }
-
-        // -- IDLE 阶段 --
-        setStatus(name, "idle");
-        boolean resume = idlePoll(name, role, teamName, messages);
-
-        if (!resume) {
-            setStatus(name, "shutdown");
-            return;  // 超时, 自动关闭
-        }
-        setStatus(name, "working");
-        // 回到 WORK 阶段
-    }
+```rust
+match policy.decide(&tasks, inbox_messages)? {
+    IdleDecision::ResumeFromInbox(msg) => messages.push(ChatMessage::user(msg)),
+    IdleDecision::ClaimTask(task) => messages.push(ChatMessage::user(format!("<auto-claimed>{}</auto-claimed>", task.subject))),
+    IdleDecision::StayIdle => {}
 }
 ```
 
-### 2. idle 工具 -- 智能体主动进入空闲
-
-智能体在完成当前工作后，调用 `idle` 工具表示"我没有更多工作了"：
-
-```java
-if ("idle".equals(tc.function().name())) {
-    idleRequested = true;
-    output = "Entering idle phase. Will poll for new tasks.";
-}
-```
-
-这不是一个真正的外部工具，而是一个信号，告诉循环切换到 IDLE 阶段。
-
-### 3. scanUnclaimedTasks() -- 扫描任务看板
-
-IDLE 阶段定期扫描 `.tasks/` 目录，寻找满足以下条件的任务：
-- `status == "pending"`
-- `owner == null`（未被认领）
-- `blockedBy` 为空（无阻塞依赖）
-
-```java
-private List<Map<String, Object>> scanUnclaimedTasks() {
-    List<Map<String, Object>> unclaimed = new ArrayList<>();
-    try {
-        Files.list(tasksDir)
-                .filter(p -> p.getFileName().toString()
-                        .matches("task_\\d+\\.json"))
-                .forEach(p -> {
-                    try {
-                        Map<String, Object> t = Lesson9RunSimple
-                                .parseJsonToMap(new String(
-                                        Files.readAllBytes(p),
-                                        StandardCharsets.UTF_8));
-                        if ("pending".equals(t.get("status"))
-                                && t.get("owner") == null
-                                && (t.get("blockedBy") == null
-                                    || ((List<?>) t.get("blockedBy"))
-                                            .isEmpty())) {
-                            unclaimed.add(t);
-                        }
-                    } catch (Exception ignored) {}
-                });
-    } catch (Exception ignored) {}
-    return unclaimed;
-}
-```
-
-### 4. claimTask() -- 原子认领
-
-认领操作用 `ReentrantLock` 保护，防止多个队友同时认领同一个任务：
-
-```java
-private String claimTask(int taskId, String owner) {
-    claimLock.lock();
-    try {
-        Path p = tasksDir.resolve("task_" + taskId + ".json");
-        if (!Files.exists(p))
-            return "Error: Task " + taskId + " not found";
-
-        Map<String, Object> task = Lesson9RunSimple.parseJsonToMap(
-                new String(Files.readAllBytes(p),
-                        StandardCharsets.UTF_8));
-        task.put("owner", owner);
-        task.put("status", "in_progress");
-        Files.write(p, Lesson9RunSimple.mapToJson(task)
-                .getBytes(StandardCharsets.UTF_8));
-
-        return "Claimed task #" + taskId + " for " + owner;
-    } catch (Exception e) {
-        return "Error: " + e.getMessage();
-    } finally {
-        claimLock.unlock();
-    }
-}
-```
-
-### 5. IDLE 阶段轮询逻辑
-
-每 5 秒检查一次，持续 60 秒。如果发现新消息或可认领任务，回到 Work 阶段：
-
-```java
-setStatus(name, "idle");
-boolean resume = false;
-int polls = IDLE_TIMEOUT / POLL_INTERVAL;  // 60/5 = 12 次
-
-for (int i = 0; i < polls; i++) {
-    try {
-        TimeUnit.SECONDS.sleep(POLL_INTERVAL);
-    } catch (Exception ignored) {}
-
-    // 1. 检查收件箱
-    List<Map<String, Object>> inbox = bus.readInbox(name);
-    if (!inbox.isEmpty()) {
-        for (Map<String, Object> msg : inbox) {
-            if ("shutdown_request".equals(msg.get("type"))) {
-                setStatus(name, "shutdown");
-                return;
-            }
-            messages.add(/* msg */);
-        }
-        resume = true;
-        break;
-    }
-
-    // 2. 扫描未认领任务
-    List<Map<String, Object>> unclaimed = scanUnclaimedTasks();
-    if (!unclaimed.isEmpty()) {
-        Map<String, Object> task = unclaimed.get(0);
-        int taskId = ((Number) task.get("id")).intValue();
-        claimTask(taskId, name);
-
-        // 3. 身份重注入 (见下文)
-        // 4. 任务注入为 auto-claimed 消息
-        messages.add(/* auto-claimed message */);
-
-        resume = true;
-        break;
-    }
-}
-
-if (!resume) {
-    // 60 秒无新工作, 自动关闭
-    setStatus(name, "shutdown");
-    return;
-}
-```
-
-### 6. 身份重注入 -- 压缩后恢复身份
-
-上下文压缩（L06）会截断对话历史，导致队友"忘记"自己是谁。解决方案是在消息较少时（说明刚压缩过），注入一个身份消息对：
-
-```java
-// 如果消息很少, 说明上下文可能被压缩过
-if (messages.size() <= 3) {
-    messages.add(0, ChatCompletionMessageParam.ofUser(
-            ChatCompletionUserMessageParam.builder().content(
-                    "<identity>You are '" + name
-                    + "', role: " + role
-                    + ", team: " + teamName
-                    + ".</identity>").build()));
-    messages.add(1, ChatCompletionMessageParam.ofAssistant(
-            ChatCompletionAssistantMessageParam.builder()
-                    .content("I am " + name + ". Continuing.")
-                    .build()));
-}
-```
-
-身份块 (`<identity>`) 插入到对话最前面，确保 LLM 在第一个消息就知道自己的角色。
-
-### 7. 自动认领后的消息注入
-
-```java
-messages.add(ChatCompletionMessageParam.ofUser(
-        ChatCompletionUserMessageParam.builder().content(
-                "<auto-claimed>Task #" + taskId + ": "
-                + task.get("subject") + "\n"
-                + task.getOrDefault("description", "")
-                + "</auto-claimed>").build()));
-messages.add(ChatCompletionMessageParam.ofAssistant(
-        ChatCompletionAssistantMessageParam.builder()
-                .content("Claimed task #" + taskId
-                        + ". Working on it.").build()));
-```
-
-### 8. 完整阶段图
-
-```
-                     spawn(name, role, prompt)
-                              |
-                              v
-+--------+   WORK   +--------+--------+
-| start  | -------> |   working       |
-+--------+          |  (agent loop)   |
-                    |                 |
-                    | idle() 或完成    |
-                    v                 |
-             +------+------+         |
-             |    idle      |         |
-             |  (轮询 5s/次) |         |
-             |              |         |
-             +--+---+---+--+         |
-                |   |   |            |
-   新消息       |   | 超时 |           |
-   或新任务     |   |   60s|           |
-                |   |   |            |
-                v   |   v            |
-           working  | shutdown       |
-           (回到顶部)|               |
-                    v                |
-              +-----------+          |
-              | shutdown  |          |
-              | (线程退出) |  <-------+
-              +-----------+   shutdown_request
-```
-
-## 变更一览
-
-| 组件 | 之前 (L10) | 之后 (L11) |
-|------|-----------|-----------|
-| 任务分配 | Lead 主动分配 | 队友自动认领 |
-| 空闲处理 | 线程结束 | IDLE 阶段轮询 (5s/次, 60s 超时) |
-| 任务扫描 | 无 | `scanUnclaimedTasks()` 扫描 `.tasks/` |
-| 任务认领 | 无 | `claimTask()` + `ReentrantLock` 原子操作 |
-| 身份管理 | 无 | 压缩后 `<identity>` 块重注入 |
-| 新工具 | 无 | `idle` (信号), `claim_task` |
-| 循环模型 | 单次 for 循环 | 无限 Work/Idle 交替循环 |
+完整源码：`openai/src/lessons/lesson11_autonomous_agents.rs`。运行入口：`openai/src/bin/lesson11.rs`。
 
 ## 试一试
 
-```sh
-mvn spring-boot:run -pl openai -Dspring-boot.run.arguments="--lesson=lesson11 --prompt='Create 3 tasks on the board (all output files should go to the trysamples directory). Spawn an autonomous worker. Watch it claim and complete tasks on its own.'"
+```bash
+cargo run -p ai-agent-learning-openai --bin lesson11 -- "创建一个 pending task"
 ```
 
-观察日志中队友进入 idle 状态后自动认领任务并恢复工作。
+还可以试：
 
-**源码**: [`Lesson11RunSimple.java`](../../openai/src/main/java/ai/agent/learning/lesson/Lesson11RunSimple.java)
+- 让 alice 空闲后自动认领
+- 给 alice inbox 写消息看它优先处理

@@ -22,7 +22,7 @@ export async function generateMetadata({
   const messages = metaMessages[locale] || metaMessages.en;
   return {
     title: messages.meta?.title || "AI Agent Learning",
-    description: messages.meta?.description || "Build AI agents from scratch with OpenAI Java SDK",
+    description: messages.meta?.description || "Build AI agents from scratch in Rust",
   };
 }
 

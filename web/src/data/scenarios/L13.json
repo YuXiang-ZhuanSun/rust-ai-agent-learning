@@ -1,93 +1,39 @@
 {
   "version": "L13",
-  "title": "Full Reference Agent — Combined Capabilities",
-  "description": "A complete agent scenario combining TodoManager, TaskManager, BackgroundManager, and multiple tools working together. This demonstrates how all the individual capabilities compose into a production-grade agent workflow.",
+  "title": "Full Reference Agent",
+  "description": "A Rust-oriented simulation for Full Reference Agent.",
   "steps": [
     {
       "type": "user_message",
-      "content": "Build a search feature for the bookstore: add a search endpoint, a search service with filtering, and integration tests. Run existing tests in the background while building.",
-      "annotation": "A complex request that requires planning (TodoManager), task tracking (TaskManager), background execution, and multiple tools."
-    },
-    {
-      "type": "tool_call",
-      "content": "[\n  { \"id\": \"1\", \"task\": \"Create SearchService with filtering logic\", \"status\": \"in_progress\" },\n  { \"id\": \"2\", \"task\": \"Add GET /api/books/search endpoint\", \"status\": \"pending\" },\n  { \"id\": \"3\", \"task\": \"Write integration tests\", \"status\": \"pending\" },\n  { \"id\": \"4\", \"task\": \"Run full test suite and verify\", \"status\": \"pending\" }\n]",
-      "toolName": "todo_write",
-      "annotation": "TODOWRITER: The agent plans its work upfront. This checklist drives the execution order and keeps the agent on track across many tool calls."
-    },
-    {
-      "type": "tool_result",
-      "content": "Todos saved (4 items). Current: #1 — Create SearchService with filtering logic",
-      "toolName": "todo_write",
-      "annotation": "Plan established. The agent now knows exactly what to do and in what order."
-    },
-    {
-      "type": "tool_call",
-      "content": "mvn test -pl bookstore-api -q 2>&1",
-      "toolName": "bash_background",
-      "annotation": "BACKGROUND TASK: Start existing tests running while the agent builds new code. This overlaps slow I/O with productive work."
-    },
-    {
-      "type": "system_event",
-      "content": "Background task started [id=bg-f41a]: 'mvn test -pl bookstore-api'\nStatus: RUNNING.",
-      "annotation": "Tests are running in the background. The agent continues building without waiting."
-    },
-    {
-      "type": "tool_call",
-      "content": "package com.bookstore.service;\n\nimport com.bookstore.model.Book;\nimport com.bookstore.repository.BookRepository;\nimport org.springframework.beans.factory.annotation.Autowired;\nimport org.springframework.stereotype.Service;\nimport java.util.List;\nimport java.util.stream.Collectors;\n\n@Service\npublic class SearchService {\n    @Autowired\n    private BookRepository bookRepository;\n\n    public List<Book> search(String query, String author, Double maxPrice) {\n        List<Book> books = bookRepository.findAll();\n        return books.stream()\n            .filter(b -> query == null || b.getTitle().toLowerCase().contains(query.toLowerCase()))\n            .filter(b -> author == null || b.getAuthor().equalsIgnoreCase(author))\n            .filter(b -> maxPrice == null || b.getPrice() <= maxPrice)\n            .collect(Collectors.toList());\n    }\n}",
-      "toolName": "write_file",
-      "annotation": "MULTI-TOOL: Creating SearchService using write_file. Todo #1 is in progress."
-    },
-    {
-      "type": "tool_result",
-      "content": "File written: src/main/java/com/bookstore/service/SearchService.java",
-      "toolName": "write_file",
-      "annotation": "SearchService created with query, author, and price filtering."
-    },
-    {
-      "type": "tool_call",
-      "content": "[\n  { \"id\": \"1\", \"task\": \"Create SearchService with filtering logic\", \"status\": \"completed\" },\n  { \"id\": \"2\", \"task\": \"Add GET /api/books/search endpoint\", \"status\": \"in_progress\" },\n  { \"id\": \"3\", \"task\": \"Write integration tests\", \"status\": \"pending\" },\n  { \"id\": \"4\", \"task\": \"Run full test suite and verify\", \"status\": \"pending\" }\n]",
-      "toolName": "todo_write",
-      "annotation": "TODOWRITER UPDATE: The agent diligently updates its todo list after completing each step. This prevents the nag reminder from firing."
-    },
-    {
-      "type": "tool_result",
-      "content": "Todos updated. Completed: 1/4. Current: #2 — Add GET /api/books/search endpoint",
-      "toolName": "todo_write",
-      "annotation": "Progress tracked. Moving to the controller endpoint."
-    },
-    {
-      "type": "tool_call",
-      "content": "old_string: '    @PostMapping\n    public Book createBook(@Valid @RequestBody Book book) {'\nnew_string: '    @GetMapping(\"/search\")\n    public List<Book> searchBooks(\n            @RequestParam(required = false) String query,\n            @RequestParam(required = false) String author,\n            @RequestParam(required = false) Double maxPrice) {\n        return searchService.search(query, author, maxPrice);\n    }\n\n    @PostMapping\n    public Book createBook(@Valid @RequestBody Book book) {'",
-      "toolName": "edit_file",
-      "annotation": "EDIT_FILE: Adding the search endpoint to BookController. Using edit_file for surgical insertion rather than rewriting the whole file."
-    },
-    {
-      "type": "tool_result",
-      "content": "Edit applied: BookController.java (7 lines added)",
-      "toolName": "edit_file",
-      "annotation": "Search endpoint added. Todo #2 complete."
-    },
-    {
-      "type": "system_event",
-      "content": "Background task completed [id=bg-f41a]: 'mvn test -pl bookstore-api'\nStatus: SUCCESS (exit code 0)\nTests run: 15, Failures: 0, Errors: 0. BUILD SUCCESS (28s)",
-      "annotation": "BACKGROUND COMPLETE: Existing tests all pass. The new code hasn't broken anything. The agent can proceed to write integration tests."
-    },
-    {
-      "type": "tool_call",
-      "content": "package com.bookstore.integration;\n\nimport org.junit.jupiter.api.Test;\nimport org.springframework.beans.factory.annotation.Autowired;\nimport org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;\nimport org.springframework.boot.test.context.SpringBootTest;\nimport org.springframework.test.web.servlet.MockMvc;\nimport static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;\nimport static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;\n\n@SpringBootTest\n@AutoConfigureMockMvc\npublic class SearchIntegrationTest {\n    @Autowired\n    private MockMvc mockMvc;\n\n    @Test\n    void searchByQuery_returnsMatchingBooks() throws Exception {\n        mockMvc.perform(get(\"/api/books/search\").param(\"query\", \"spring\"))\n            .andExpect(status().isOk())\n            .andExpect(jsonPath(\"$\").isArray());\n    }\n\n    @Test\n    void searchByAuthor_filtersCorrectly() throws Exception {\n        mockMvc.perform(get(\"/api/books/search\").param(\"author\", \"Joshua Bloch\"))\n            .andExpect(status().isOk())\n            .andExpect(jsonPath(\"$\").isArray());\n    }\n\n    @Test\n    void searchWithMaxPrice_filtersCorrectly() throws Exception {\n        mockMvc.perform(get(\"/api/books/search\").param(\"maxPrice\", \"29.99\"))\n            .andExpect(status().isOk())\n            .andExpect(jsonPath(\"$\").isArray());\n    }\n}",
-      "toolName": "write_file",
-      "annotation": "WRITE_FILE: Creating integration tests. The agent combines MockMvc with Spring Boot test context for realistic API testing."
-    },
-    {
-      "type": "tool_result",
-      "content": "File written: src/test/java/com/bookstore/integration/SearchIntegrationTest.java",
-      "toolName": "write_file",
-      "annotation": "Integration tests created. All capabilities — TodoManager, BackgroundManager, multiple tools — worked together seamlessly in a single agent session."
+      "content": "Try the Rust Full Reference Agent lesson on a small agent task.",
+      "annotation": "The user prompt enters the typed Rust message list."
     },
     {
       "type": "assistant_text",
-      "content": "Search feature complete! Here's what the agent orchestrated:\n\n**Planning (TodoManager):** 4 todos created, tracked, and completed in order.\n\n**Background (BackgroundManager):** Existing test suite ran in parallel (15 tests passed) while new code was written.\n\n**Implementation (Multi-Tool):**\n1. `SearchService.java` — filtering by query, author, and price\n2. `BookController.java` — `GET /api/books/search` endpoint with optional params\n3. `SearchIntegrationTest.java` — 3 integration tests with MockMvc\n\nAll managers coordinated: todos kept the agent on track, background tasks saved time, and multiple tools handled different file operations.",
-      "annotation": "This scenario demonstrates the full agent architecture: structured planning, parallel execution, multi-tool orchestration, and progress tracking all working in concert. Each lesson (L00-L12) contributes a building block to this complete system."
+      "content": "I will use the lesson mechanism and keep the loop readable.",
+      "annotation": "The assistant either answers directly or prepares to request a tool."
+    },
+    {
+      "type": "tool_call",
+      "tool": "task_create",
+      "content": "{\n  \"demo\": true\n}",
+      "annotation": "The model requests the task_create tool."
+    },
+    {
+      "type": "tool_result",
+      "tool": "task_create",
+      "content": "task_create completed in the Rust runtime.",
+      "annotation": "Rust executes the tool and appends a tool result message."
+    },
+    {
+      "type": "assistant_text",
+      "content": "The result is incorporated and the agent continues with the updated context.",
+      "annotation": "The loop returns control to the model with the new evidence."
+    },
+    {
+      "type": "assistant_text",
+      "content": "Lesson L13 demonstrates Full Reference Agent in Rust without hiding the core control flow.",
+      "annotation": "The turn finishes once there are no more tool calls."
     }
   ]
 }

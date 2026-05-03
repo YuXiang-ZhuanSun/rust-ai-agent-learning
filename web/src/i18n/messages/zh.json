@@ -1,21 +1,30 @@
 {
-  "meta": { "title": "AI Agent 学习教程", "description": "使用 OpenAI Java SDK 从零构建 AI Agent — 14 节渐进式课程" },
-  "nav": { "home": "首页", "timeline": "学习路径", "compare": "课程对比", "layers": "架构层", "github": "GitHub" },
+  "meta": {
+    "title": "AI Agent 学习教程",
+    "description": "用 Rust 从零构建 AI Agent 的 14 节渐进式课程"
+  },
+  "nav": {
+    "home": "首页",
+    "timeline": "学习路径",
+    "compare": "课程对比",
+    "layers": "架构层",
+    "github": "GitHub"
+  },
   "home": {
     "hero_title": "AI Agent 学习教程",
-    "hero_subtitle": "使用 OpenAI Java SDK 从零构建 AI Agent — 14 节渐进式课程，从基础聊天循环到多 Agent 协作",
+    "hero_subtitle": "用 Rust 从零构建 AI Agent，从基础聊天调用到自治多 Agent 协作",
     "start": "开始学习",
     "core_pattern": "核心模式",
-    "core_pattern_desc": "所有 AI Agent 共享同一个内核：调用模型、执行工具、回传结果。每节课在此基础上增加一个新机制。",
+    "core_pattern_desc": "所有 Agent 都共享一个内核：把消息发给模型，执行模型请求的工具，把观察结果回填，然后循环直到模型停止。",
     "learning_path": "学习路径",
-    "learning_path_desc": "14 节渐进式课程，从简单聊天循环到自主多 Agent 执行",
-    "layers_title": "架构层次",
-    "layers_desc": "五个正交关注点组合成完整的 Agent 系统",
-    "loc": "行",
+    "learning_path_desc": "14 节渐进课程，从简单聊天调用到自治多 Agent 执行",
+    "layers_title": "架构层",
+    "layers_desc": "五类关注点组合成完整 Agent 系统",
+    "loc": "行数",
     "learn_more": "了解更多",
     "lessons_in_layer": "节课",
     "message_flow": "消息增长",
-    "message_flow_desc": "观察 Agent 循环执行时消息数组的增长"
+    "message_flow_desc": "观察 Agent 循环执行时 messages 数组如何增长"
   },
   "lesson": {
     "loc": "行代码",
@@ -31,32 +40,32 @@
     "key_insight": "核心洞察"
   },
   "sim": {
-    "no_scenario": "此课程暂无模拟场景。",
-    "click_play": "点击播放或单步按钮开始模拟。"
+    "no_scenario": "本课暂无模拟场景。",
+    "click_play": "点击播放或单步开始模拟。"
   },
   "deep_dive": {
     "architecture": "架构",
     "design_decisions": "设计决策",
     "execution_flow": "执行流程",
     "whats_new": "新增内容",
-    "no_decisions": "此课程暂无设计决策文档。",
-    "alternatives": "替代方案"
+    "no_decisions": "本课暂无设计决策文档。",
+    "alternatives": "考虑过的替代方案"
   },
   "timeline": {
     "title": "学习路径",
-    "subtitle": "第 0 课到第 13 课：使用 OpenAI Java SDK 渐进式 Agent 设计",
-    "layer_legend": "层次图例",
+    "subtitle": "第 0 课到第 13 课：用 Rust 渐进设计 Agent",
+    "layer_legend": "层级图例",
     "loc_growth": "代码量增长",
     "learn_more": "了解更多"
   },
   "layers": {
-    "title": "架构层次",
-    "subtitle": "五个正交关注点组合成完整的 Agent",
-    "tools": "Agent 能做什么。基础层：工具赋予模型与外部世界交互的能力。",
-    "planning": "如何组织工作。从简单的待办列表到跨 Agent 共享的依赖感知任务板。",
-    "memory": "在上下文限制内保持记忆。压缩策略让 Agent 可以无限工作而不失去连贯性。",
-    "concurrency": "非阻塞执行。后台线程和通知总线实现并行工作。",
-    "collaboration": "多 Agent 协作。团队、消息传递、协议和能独立思考的自主队友。"
+    "title": "架构层",
+    "subtitle": "五类关注点组合成完整 Agent",
+    "tools": "Agent 能做什么：工具让模型能与外部世界交互。",
+    "planning": "如何组织工作：从待办列表到带依赖的任务板。",
+    "memory": "如何保持上下文可用：压缩和摘要让会话持续。",
+    "concurrency": "如何避免阻塞：慢任务在后台运行。",
+    "collaboration": "如何协作：团队、消息、协议和自治队友。"
   },
   "compare": {
     "title": "课程对比",
@@ -66,25 +75,25 @@
     "loc_delta": "代码量差异",
     "lines": "行",
     "new_tools_in_b": "B 中新增工具",
-    "new_classes_in_b": "B 中新增类",
-    "new_methods_in_b": "B 中新增方法",
+    "new_classes_in_b": "B 中新增类型",
+    "new_methods_in_b": "B 中新增函数",
     "tool_comparison": "工具对比",
     "only_in": "仅在",
     "shared": "共有",
     "none": "无",
     "source_diff": "源码差异",
-    "empty_hint": "请在上方选择两节课进行对比。"
+    "empty_hint": "请选择两节课进行对比。"
   },
   "diff": {
-    "new_classes": "新增类",
+    "new_classes": "新增类型",
     "new_tools": "新增工具",
-    "new_methods": "新增方法",
+    "new_methods": "新增函数",
     "loc_delta": "代码量差异"
   },
   "lessons": {
-    "L00": "基础聊天循环",
-    "L01": "工具使用",
-    "L02": "多工具",
+    "L00": "Agent 循环",
+    "L01": "工具调用",
+    "L02": "工具分发",
     "L03": "待办管理",
     "L04": "子 Agent",
     "L05": "技能系统",
@@ -93,14 +102,14 @@
     "L08": "后台任务",
     "L09": "Agent 团队",
     "L10": "团队协议",
-    "L11": "自主 Agent",
+    "L11": "自治 Agent",
     "L12": "工作树隔离",
     "L13": "完整参考 Agent"
   },
   "layer_labels": {
     "tools": "工具与执行",
     "planning": "规划与协调",
-    "memory": "内存管理",
+    "memory": "记忆管理",
     "concurrency": "并发",
     "collaboration": "协作"
   },

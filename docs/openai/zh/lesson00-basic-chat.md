@@ -1,78 +1,73 @@
-# Lesson 0: Basic Chat (基础对话)
+# Lesson 0: Agent 循环
 
-`[ L00 ] L01 > L02 > L03 > L04 > L05 > L06 | L07 > L08 > L09 > L10 > L11 > L12 > L13`
+```text
+[ L00 ] > L01 > L02 > L03 > L04 > L05 > L06 > L07 > L08 > L09 > L10 > L11 > L12 > L13
+```
 
-> *"发一个 prompt, 收一个回复"* -- 与 LLM 最简单的交互。
+> 一个 bash 工具 + 一个 while 循环，就是最小可用的 Coding Agent。
 
 ## 问题
 
-构建智能体之前, 得先能和模型对话。OpenAI Java SDK 处理了 HTTP、认证和序列化, 但你仍需理解请求/响应结构: 模型选择、系统提示注入和响应提取。
+LLM 会推理，但不会自己碰文件系统。它不知道 `cargo test` 的真实输出，也不能替你创建文件。Agent Loop 的意义，就是把模型的“下一步意图”变成宿主程序执行的工具调用，再把观察结果放回消息历史。没有这个循环，工具调用只是一次性函数；有了循环，模型可以根据真实反馈继续行动。
 
 ## 解决方案
 
-```
-+--------+      +-------+      +----------+
-|  User  | ---> |  LLM  | ---> | Response |
-| prompt |      |       |      |  text    |
-+--------+      +-------+      +----------+
-
-没有循环。没有工具。一个请求, 一个响应。
+```text
++--------+      +-------+      +-------------+
+| User   | ---> |  LLM  | ---> | bash tool   |
+| goal   |      |       |      | executes    |
++--------+      +---+---+      +------+------+
+                    ^                 |
+                    |   tool_result   |
+                    +-----------------+
+              loop until no tool calls
 ```
 
 ## 工作原理
 
-1. 配置客户端 -- API Key、Base URL 和可选代理。
+1. 用户输入先进入 `messages`，这是 Agent 当前任务的工作记忆。
+2. 系统提示只规定角色和边界：你是 coding agent，可以使用 bash。
+3. 模型如果返回工具调用，Rust 解析参数并执行 `run_bash`。
+4. 命令输出不直接打印完事，而是作为 `tool` 消息回填给模型。
+5. 模型看到真实输出后继续下一轮，直到它不再调用工具。
 
-```java
-Proxy proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(proxyHost, proxyPort));
+## 本章机制
 
-OpenAIClient client = OpenAIOkHttpClient.builder()
-        .apiKey(apiKey)
-        .baseUrl(baseUrl)
-        .proxy(proxy)
-        .build();
-```
+| 组件 | 作用 |
+|------|------|
+| 工具 | `bash`：让模型第一次接触真实世界 |
+| 状态 | `messages: Vec<ChatMessage>` 累积所有观察 |
+| 安全 | 危险命令拦截 + 最大轮数限制 |
+| 核心 | 工具结果必须回填给模型，而不是只给用户看 |
 
-`OpenAIOkHttpClient` 的 builder 封装了所有 HTTP 管道。代理是可选的 -- 如果可以直连 API 则不需要。
+## 源码切片
 
-2. 构建请求 -- 模型、系统消息和用户消息。
-
-```java
-ChatCompletionCreateParams.Builder paramsBuilder = ChatCompletionCreateParams.builder()
-        .model(ChatModel.of(modelName));
-
-if (systemPrompt != null && !systemPrompt.isEmpty()) {
-    paramsBuilder.addSystemMessage(systemPrompt);
+```rust
+pub async fn agent_loop(client: &OpenAiClient, messages: &mut Vec<ChatMessage>) -> Result<()> {
+    let tools = vec![bash_tool()];
+    for _ in 0..MAX_ROUNDS {
+        let response = client.chat(messages, &tools).await?;
+        let tool_calls = response.tool_calls.clone().unwrap_or_default();
+        messages.push(response);
+        if tool_calls.is_empty() { return Ok(()); }
+        for call in tool_calls {
+            let output = run_bash(command_from(&call)?);
+            messages.push(ChatMessage::tool(call.id, output));
+        }
+    }
+    Ok(())
 }
-paramsBuilder.addUserMessage(userPrompt);
 ```
 
-`ChatModel.of(modelName)` 接受任意模型字符串 -- `"gpt-4o"`、`"gpt-4o-mini"` 或自定义部署名。系统消息设定角色人设; 用户消息是真正的 prompt。
-
-3. 发送请求并提取响应。
-
-```java
-ChatCompletion completion = client.chat().completions().create(paramsBuilder.build());
-String response = completion.choices().get(0).message().content().orElse("No response");
-```
-
-`content()` 返回 `Optional<String>`, 因为模型可能返回工具调用而不是文本 (我们将在 Lesson 1 中看到)。这里我们直接解包。
-
-没有循环, 没有工具, 没有消息累积。这是所有后续课程的基线。
-
-## 变更内容
-
-| 组件          | 之前       | 之后                           |
-|---------------|------------|--------------------------------|
-| LLM 调用      | (无)       | 单次请求/响应                  |
-| 客户端        | (无)       | OpenAI Java SDK + 代理         |
-| 消息          | (无)       | 系统消息 + 用户消息            |
-| 控制流        | (无)       | 线性 (无循环)                  |
+完整源码：`openai/src/lessons/lesson00_basic_chat.rs`。运行入口：`openai/src/bin/lesson00.rs`。
 
 ## 试一试
 
-```sh
-mvn spring-boot:run -pl openai -Dspring-boot.run.arguments="--lesson=lesson0 --prompt='你好, 你能做什么?'"
+```bash
+cargo run -p ai-agent-learning-openai --bin lesson00 -- "创建一个 hello.txt 并写入一句话"
 ```
 
-**源码**: [`Lesson0RunSimple.java`](../../openai/src/main/java/ai/agent/learning/lesson/Lesson0RunSimple.java)
+还可以试：
+
+- 列出当前目录下的 Rust 文件
+- 运行一次 cargo test 并解释失败原因

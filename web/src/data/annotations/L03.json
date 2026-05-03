@@ -2,23 +2,25 @@
   "version": "L03",
   "decisions": [
     {
-      "id": "plan-before-execute",
-      "title": "Why Plan Before Execute",
-      "description": "A TodoWrite tool forces the agent to articulate its plan as a structured list of tasks before executing any of them. This is not just good practice — it fundamentally changes agent behavior. Without a plan, agents tend to act greedily, solving whatever is immediately in front of them. With a written plan, the agent can reason about task ordering, dependencies, and completeness.",
-      "alternatives": "We considered letting the agent plan implicitly through chain-of-thought reasoning. However, an explicit todo list is inspectable by the user, modifiable at runtime, and serves as a progress tracker. Implicit plans disappear once the context scrolls away.",
+      "id": "plan-then-act",
+      "title": "Why TodoWrite Makes Plans Visible",
+      "description": "TodoWrite asks the agent to turn an intention into a short, inspectable task list. That list gives the user a clear view of progress and gives the agent a stable structure for ordering work, tracking completion, and avoiding drift.",
+      "alternatives": "The agent could keep a plan only in conversation text, but structured todos are easier to render, update, test, and inspect.",
       "zh": {
-        "title": "为什么先规划再执行",
-        "description": "TodoWrite 工具强制 Agent 在执行任何操作之前，先将计划表达为结构化的任务列表。这不仅是好习惯，更从根本上改变了 Agent 的行为模式。没有计划时，Agent 倾向于贪心地解决眼前的问题；有了书面计划后，Agent 能够推理任务的顺序、依赖关系和完整性。"
+        "title": "为什么 TodoWrite 能让计划可见",
+        "description": "TodoWrite 要求 Agent 把目标拆成简短、可检查的任务列表。用户可以直接看到进度，Agent 也能用这个结构安排顺序、跟踪完成情况，并减少跑偏。",
+        "alternatives": "Agent 也可以只在对话文本里描述计划，但结构化待办更容易展示、更新、测试和检查。"
       }
     },
     {
       "id": "nag-reminders-help-completion",
-      "title": "Why Nag Reminders Help Completion",
-      "description": "After each tool execution, the system injects a reminder of incomplete todo items into the conversation. This 'nagging' mechanism counteracts a common failure mode: the agent gets distracted by a subtask and forgets the original plan. By constantly re-surfacing the todo list, the agent stays on track and completes all planned steps.",
-      "alternatives": "We tried relying on the agent's memory alone, but LLMs frequently lose track of multi-step plans, especially as context grows. A periodic summary of remaining tasks was considered, but per-turn reminders proved more reliable at preventing drift.",
+      "title": "Why Reminders Help Completion",
+      "description": "When open todos remain, a lightweight reminder can be injected into the conversation. This keeps the current plan visible while the agent works through tool calls and subtasks.",
+      "alternatives": "Relying on model memory alone is fragile as context grows. A small explicit reminder is simple and predictable.",
       "zh": {
-        "title": "为什么反复提醒有助于任务完成",
-        "description": "每次工具执行后，系统会将未完成的待办事项注入对话中。这种「唠叨」机制针对的是一种常见的失败模式：Agent 被子任务分散注意力，忘记了原始计划。通过不断地重新呈现待办列表，Agent 能保持在正轨上，完成所有计划步骤。"
+        "title": "为什么提醒有助于完成任务",
+        "description": "当仍有未完成待办时，系统可以向对话注入轻量提醒。这样 Agent 在执行工具和子任务时，仍能看到当前计划。",
+        "alternatives": "只依赖模型记忆在上下文变长后并不可靠；显式的小提醒更简单、更可预测。"
       }
     }
   ]

@@ -1,63 +1,39 @@
 {
   "version": "L04",
-  "title": "Subagents — Delegating Subtasks",
-  "description": "The agent spawns a subagent to handle an isolated subtask. The subagent runs with its own context window and tool permissions, then returns a result to the parent agent. This enables divide-and-conquer for complex work.",
+  "title": "Subagents",
+  "description": "A Rust-oriented simulation for Subagents.",
   "steps": [
     {
       "type": "user_message",
-      "content": "Refactor the UserService module: extract the email validation logic into a separate EmailValidator utility class.",
-      "annotation": "This is a two-part task: (1) create the new EmailValidator class, (2) update UserService to use it. The parent agent can delegate part of the work to a subagent."
+      "content": "Try the Rust Subagents lesson on a small agent task.",
+      "annotation": "The user prompt enters the typed Rust message list."
     },
     {
       "type": "assistant_text",
-      "content": "I'll spawn a subagent to handle the EmailValidator extraction while I plan the UserService updates.",
-      "annotation": "The parent agent decides to delegate. It will create a subagent with a focused prompt and limited tool access."
+      "content": "I will use the lesson mechanism and keep the loop readable.",
+      "annotation": "The assistant either answers directly or prepares to request a tool."
     },
     {
       "type": "tool_call",
-      "content": "{\n  \"prompt\": \"Create a Java utility class EmailValidator in com.app.util package. It should have a static method isValid(String email) that uses a regex pattern to validate email format. Include a private constructor to prevent instantiation.\",\n  \"tools\": [\"write_file\", \"read_file\", \"bash\"],\n  \"allowedPaths\": [\"src/main/java/com/app/util/\"]\n}",
-      "toolName": "subagent",
-      "annotation": "The subagent is spawned with: (1) a focused prompt describing exactly what to do, (2) a limited tool set — only file operations and bash, (3) restricted file paths — it can only touch the util package. This is the principle of least privilege."
-    },
-    {
-      "type": "system_event",
-      "content": "Subagent spawned [id=sub-7a3f]. Context: isolated (no parent conversation history). Tools: write_file, read_file, bash. Path restriction: src/main/java/com/app/util/",
-      "annotation": "The subagent runs in an isolated context — it cannot see the parent's conversation history. This prevents context pollution and keeps the subagent focused on its specific task."
+      "tool": "task",
+      "content": "{\n  \"demo\": true\n}",
+      "annotation": "The model requests the task tool."
     },
     {
       "type": "tool_result",
-      "content": "Subagent [sub-7a3f] completed.\nCreated: src/main/java/com/app/util/EmailValidator.java\n\npublic final class EmailValidator {\n    private static final String EMAIL_REGEX = \"^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$\";\n    private static final Pattern PATTERN = Pattern.compile(EMAIL_REGEX);\n\n    private EmailValidator() {}\n\n    public static boolean isValid(String email) {\n        if (email == null) return false;\n        return PATTERN.matcher(email).matches();\n    }\n}\nCompilation: SUCCESS",
-      "toolName": "subagent",
-      "annotation": "The subagent returns its result to the parent. It created the file and verified compilation. The parent agent now has the result without having spent its own context window on the implementation details."
-    },
-    {
-      "type": "tool_call",
-      "content": "src/main/java/com/app/service/UserService.java",
-      "toolName": "read_file",
-      "annotation": "Now the parent agent reads UserService to plan the integration. It works with the subagent's output."
-    },
-    {
-      "type": "tool_result",
-      "content": "1│ package com.app.service;\n2│ \n3│ import java.util.regex.Pattern;\n4│ \n5│ public class UserService {\n6│     private static final String EMAIL_REGEX = \"^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$\";\n7│ \n8│     public void registerUser(String name, String email) {\n9│         if (!Pattern.matches(EMAIL_REGEX, email)) {\n10│             throw new IllegalArgumentException(\"Invalid email\");\n11│         }\n12│         // save user...\n13│     }\n14│ }",
-      "toolName": "read_file",
-      "annotation": "The parent reads the original file. Lines 3, 6, and 9 contain the inline email validation that should now delegate to EmailValidator."
-    },
-    {
-      "type": "tool_call",
-      "content": "old_string: 'import java.util.regex.Pattern;\n\npublic class UserService {\n    private static final String EMAIL_REGEX = \"^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$\";\n\n    public void registerUser(String name, String email) {\n        if (!Pattern.matches(EMAIL_REGEX, email)) {'\nnew_string: 'import com.app.util.EmailValidator;\n\npublic class UserService {\n\n    public void registerUser(String name, String email) {\n        if (!EmailValidator.isValid(email)) {'",
-      "toolName": "edit_file",
-      "annotation": "The parent agent refactors UserService to use the subagent-created EmailValidator. The duplicated regex is removed and replaced with a clean method call."
-    },
-    {
-      "type": "tool_result",
-      "content": "Edit applied: UserService.java (removed 2 lines, changed 2 lines)",
-      "toolName": "edit_file",
-      "annotation": "Refactoring complete. The parent and subagent worked in parallel on different parts of the codebase."
+      "tool": "task",
+      "content": "task completed in the Rust runtime.",
+      "annotation": "Rust executes the tool and appends a tool result message."
     },
     {
       "type": "assistant_text",
-      "content": "Refactoring complete:\n\n1. **EmailValidator** (created by subagent) — `com.app.util.EmailValidator` with `isValid(String)` method\n2. **UserService** (updated by parent) — now delegates to `EmailValidator.isValid()` instead of inline regex\n\nThe duplicated email regex is removed. Both files compile successfully.",
-      "annotation": "The parent summarizes the combined work. Subagents let an agent handle larger tasks by splitting work while maintaining isolation between subtasks."
+      "content": "The result is incorporated and the agent continues with the updated context.",
+      "annotation": "The loop returns control to the model with the new evidence."
+    },
+    {
+      "type": "assistant_text",
+      "content": "Lesson L04 demonstrates Subagents in Rust without hiding the core control flow.",
+      "annotation": "The turn finishes once there are no more tool calls."
     }
   ]
 }

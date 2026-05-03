@@ -1,37 +1,22 @@
 {
   "version": "L00",
-  "title": "Basic Chat Loop",
-  "description": "A simple chat loop with no tool usage. The agent receives a user message and responds with a plain text explanation. This is the foundation of all agent interactions.",
+  "title": "Basic Chat",
+  "description": "A Rust-oriented simulation for Basic Chat.",
   "steps": [
     {
       "type": "user_message",
-      "content": "Can you explain recursion in Java with a simple example?",
-      "annotation": "The user sends a plain text message. This enters the agent's chat loop as a new conversation turn."
+      "content": "Try the Rust Basic Chat lesson on a small agent task.",
+      "annotation": "The user prompt enters the typed Rust message list."
     },
     {
       "type": "assistant_text",
-      "content": "Recursion is when a method calls itself to solve a problem by breaking it into smaller subproblems. Each recursive call works on a smaller input until it reaches a base case.\n\nHere's a classic example — computing factorial:\n\n```java\npublic class Recursion {\n    public static int factorial(int n) {\n        if (n <= 1) return 1;        // base case\n        return n * factorial(n - 1);  // recursive case\n    }\n\n    public static void main(String[] args) {\n        System.out.println(factorial(5)); // 120\n    }\n}\n```\n\nThe call chain for `factorial(5)` is:\n5 * factorial(4) → 5 * 4 * factorial(3) → ... → 5 * 4 * 3 * 2 * 1 = 120\n\nEvery recursive method needs two things:\n1. **Base case** — the condition that stops recursion (`n <= 1`)\n2. **Recursive case** — the call that moves toward the base case (`factorial(n - 1)`)",
-      "annotation": "The LLM generates a response. No tool calls are needed — the model has enough knowledge to answer directly. The chat loop completes this turn."
-    },
-    {
-      "type": "user_message",
-      "content": "What about tail recursion? Does Java optimize it?",
-      "annotation": "A follow-up message starts a new iteration of the chat loop. The conversation history (including the previous exchange) is included in the context."
+      "content": "I can answer directly with one chat completion.",
+      "annotation": "The assistant either answers directly or prepares to request a tool."
     },
     {
       "type": "assistant_text",
-      "content": "Tail recursion is when the recursive call is the very last operation in the method — there's no pending computation after it returns.\n\n```java\npublic static int factorialTail(int n, int accumulator) {\n    if (n <= 1) return accumulator;\n    return factorialTail(n - 1, n * accumulator); // tail position\n}\n```\n\nHowever, **Java does not perform tail-call optimization (TCO)**. The JVM specification does not guarantee it, so each recursive call still adds a frame to the call stack. Deep recursion in Java can throw `StackOverflowError`.\n\nFor performance-critical code, convert tail recursion to an iterative loop:\n\n```java\npublic static int factorialIterative(int n) {\n    int result = 1;\n    for (int i = 2; i <= n; i++) {\n        result *= i;\n    }\n    return result;\n}\n```",
-      "annotation": "The agent answers using its training data. This is a pure knowledge response — no external tools or actions required. The chat loop continues waiting for the next user message."
-    },
-    {
-      "type": "user_message",
-      "content": "Thanks, that's clear!",
-      "annotation": "The user signals satisfaction. The agent can close the conversation gracefully."
-    },
-    {
-      "type": "assistant_text",
-      "content": "You're welcome! To summarize the key takeaway: always prefer iteration over deep recursion in Java since the JVM doesn't optimize tail calls. If you do use recursion, make sure your base case is correct to avoid `StackOverflowError`. Happy coding!",
-      "annotation": "Final response. The chat loop ends naturally when no further user input arrives. This basic loop pattern — receive message, generate response, repeat — is the core of every agent."
+      "content": "Lesson L00 demonstrates Basic Chat in Rust without hiding the core control flow.",
+      "annotation": "The turn finishes once there are no more tool calls."
     }
   ]
 }

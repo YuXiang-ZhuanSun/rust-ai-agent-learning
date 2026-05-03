@@ -1,0 +1,20 @@
+[package]
+name = "ai-agent-learning-openai"
+version = "0.1.0"
+edition = "2021"
+description = "A from-scratch Rust tutorial for building AI agents with OpenAI-compatible APIs."
+license = "MIT"
+
+[dependencies]
+anyhow = "1"
+chrono = { version = "0.4", features = ["serde"] }
+reqwest = { version = "0.12", features = ["json", "rustls-tls"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+thiserror = "2"
+tokio = { version = "1", features = ["macros", "rt-multi-thread", "time"] }
+uuid = { version = "1", features = ["v4", "serde"] }
+
+[dev-dependencies]
+tempfile = "3"
+
